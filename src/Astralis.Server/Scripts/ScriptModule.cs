@@ -1,7 +1,8 @@
 using Astralis.Core.Server.Attributes.Scripts;
 using Astralis.Core.Server.Data.Directories;
 using Astralis.Core.Server.Interfaces.Services.System;
-using KeraLua;
+using NLua;
+
 
 namespace Astralis.Server.Scripts;
 

@@ -28,12 +28,12 @@ class Program
 
         if (string.IsNullOrEmpty(options.RootPath))
         {
-            options.RootPath = Path.Combine(Directory.GetCurrentDirectory(), "orion");
+            options.RootPath = Path.Combine(Directory.GetCurrentDirectory(), "astralis");
         }
 
         var directoriesConfig = new DirectoriesConfig(options.RootPath);
 
-        if (Environment.GetEnvironmentVariable("ORION_ROOT_PATH") is { } envRootPath)
+        if (Environment.GetEnvironmentVariable("ASTRALIS_ROOT_PATH") is { } envRootPath)
         {
             directoriesConfig = new DirectoriesConfig(envRootPath);
         }
