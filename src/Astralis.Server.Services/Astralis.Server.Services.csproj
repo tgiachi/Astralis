@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Version>0.1.0-alpha.0</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Astralis.Core.Server\Astralis.Core.Server.csproj" />
+      <ProjectReference Include="..\Astralis.Core\Astralis.Core.csproj" />
+      <ProjectReference Include="..\Astralis.Network\Astralis.Network.csproj" />
+    </ItemGroup>
+
+</Project>
