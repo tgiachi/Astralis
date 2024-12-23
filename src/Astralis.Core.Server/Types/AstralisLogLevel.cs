@@ -1,6 +1,6 @@
 namespace Astralis.Core.Server.Types;
 
-public enum OrionLogLevel
+public enum AstralisLogLevel
 {
     Trace,
     Debug,

@@ -5,16 +5,16 @@ namespace Astralis.Core.Server.Extensions;
 
 public static class OrionLogLevelExtension
 {
-    public static LogEventLevel ToLogLevel(this OrionLogLevel logLevel)
+    public static LogEventLevel ToLogLevel(this AstralisLogLevel logLevel)
     {
         return logLevel switch
         {
-            OrionLogLevel.Trace       => LogEventLevel.Verbose,
-            OrionLogLevel.Debug       => LogEventLevel.Debug,
-            OrionLogLevel.Information => LogEventLevel.Information,
-            OrionLogLevel.Warning     => LogEventLevel.Warning,
-            OrionLogLevel.Error       => LogEventLevel.Error,
-            OrionLogLevel.Critical    => LogEventLevel.Fatal,
+            AstralisLogLevel.Trace       => LogEventLevel.Verbose,
+            AstralisLogLevel.Debug       => LogEventLevel.Debug,
+            AstralisLogLevel.Information => LogEventLevel.Information,
+            AstralisLogLevel.Warning     => LogEventLevel.Warning,
+            AstralisLogLevel.Error       => LogEventLevel.Error,
+            AstralisLogLevel.Critical    => LogEventLevel.Fatal,
             _                         => LogEventLevel.Information
         };
     }

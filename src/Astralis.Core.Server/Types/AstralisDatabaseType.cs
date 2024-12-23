@@ -1,6 +1,6 @@
 namespace Astralis.Core.Server.Types;
 
-public enum OrionDatabaseType
+public enum AstralisDatabaseType
 {
     LiteDb,
     Sqlite,

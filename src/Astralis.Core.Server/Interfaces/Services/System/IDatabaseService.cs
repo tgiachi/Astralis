@@ -1,9 +1,10 @@
 using System.Linq.Expressions;
+using Astralis.Core.Interfaces.Services.Base;
 using Astralis.Core.Server.Interfaces.Entities;
 
 namespace Astralis.Core.Server.Interfaces.Services.System;
 
-public interface IDatabaseService : IDisposable
+public interface IDatabaseService : IDisposable, IAstralisSystemService
 {
     Task<TEntity> InsertAsync<TEntity>(TEntity entity) where TEntity : class, IBaseDbEntity;
 
