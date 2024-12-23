@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Astralis.Core.Server", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Astralis.Server.Services", "src\Astralis.Server.Services\Astralis.Server.Services.csproj", "{7C3D861F-3D16-40F7-9E5F-E7903229C4E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Astralis.Bot.Client", "src\Astralis.Bot.Client\Astralis.Bot.Client.csproj", "{79460AC7-9F85-4025-B9D2-935AEAEDF295}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Astralis.Network.Client", "src\Astralis.Network.Client\Astralis.Network.Client.csproj", "{721734C5-E04A-4EB7-B505-0D461FBA159D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +52,13 @@ Global
 		{7C3D861F-3D16-40F7-9E5F-E7903229C4E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C3D861F-3D16-40F7-9E5F-E7903229C4E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C3D861F-3D16-40F7-9E5F-E7903229C4E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79460AC7-9F85-4025-B9D2-935AEAEDF295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79460AC7-9F85-4025-B9D2-935AEAEDF295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79460AC7-9F85-4025-B9D2-935AEAEDF295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79460AC7-9F85-4025-B9D2-935AEAEDF295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{721734C5-E04A-4EB7-B505-0D461FBA159D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{721734C5-E04A-4EB7-B505-0D461FBA159D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{721734C5-E04A-4EB7-B505-0D461FBA159D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{721734C5-E04A-4EB7-B505-0D461FBA159D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
