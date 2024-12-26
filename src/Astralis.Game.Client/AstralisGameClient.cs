@@ -1,4 +1,5 @@
 using System.Drawing;
+using Astralis.Game.Client.Core;
 using Microsoft.Extensions.Hosting;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
@@ -8,47 +9,23 @@ namespace Astralis.Game.Client;
 
 public class AstralisGameClient : IHostedService
 {
-    public static GL Gl { get; private set; }
-    private readonly IWindow _window;
+    private readonly OpenGlContext _openGlContext;
 
-
-    private IInputContext _inputContext;
-
-
-    public AstralisGameClient(IWindow window)
+    public AstralisGameClient(OpenGlContext openGlContext)
     {
-        _window = window;
-        _window.Load += OnLoad;
-        _window.Update += OnUpdate;
-        _window.Render += OnRender;
+        _openGlContext = openGlContext;
     }
 
-    private void OnRender(double deltaTime)
-    {
-        Gl.Clear(ClearBufferMask.ColorBufferBit);
-    }
-
-    private void OnUpdate(double deltaTime)
-    {
-    }
-
-    private void OnLoad()
-    {
-        _inputContext = _window.CreateInput();
-        Gl = _window.CreateOpenGL();
-
-        Gl.ClearColor(Color.CornflowerBlue);
-    }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        Task.Run(() => _window.Run(), cancellationToken);
+        Task.Run(() => _openGlContext.Run(), cancellationToken);
         return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _window.Close();
+        _openGlContext.Stop();
         return Task.CompletedTask;
     }
 }

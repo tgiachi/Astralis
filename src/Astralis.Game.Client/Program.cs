@@ -1,5 +1,7 @@
 ﻿using Astralis.Core.Interfaces.Services;
 using Astralis.Core.Services;
+using Astralis.Game.Client.Core;
+using Astralis.Game.Client.Data;
 using Astralis.Game.Client.Impl;
 using Astralis.Game.Client.Interfaces.Services;
 using Astralis.Network;
@@ -31,21 +33,9 @@ class Program
         builder.Services
             .AddSingleton<IEventBusService, EventBusService>()
             .AddSingleton<INetworkClient, NetworkClient>()
-            .AddSingleton<ITextureManagerService, TextureManagerService>();
-
-
-        builder.Services.AddSingleton<IWindow>(
-            provider =>
-            {
-                var options = WindowOptions.Default with
-                {
-                    Size = new Vector2D<int>(800, 600),
-                    Title = "Astralis Game Client v0.0.1"
-                };
-
-                return Window.Create(options);
-            }
-        );
+            .AddSingleton<ITextureManagerService, TextureManagerService>()
+            .AddSingleton(new AstralisGameConfig())
+            .AddSingleton<OpenGlContext>();
 
         builder.Services.AddHostedService<AstralisGameClient>();
 
