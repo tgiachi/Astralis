@@ -35,7 +35,7 @@ class Program
             .AddSingleton<INetworkClient, NetworkClient>()
             .AddSingleton<ITextureManagerService, TextureManagerService>()
             .AddSingleton(new AstralisGameConfig())
-            .AddSingleton<OpenGlContext>();
+            .AddSingleton<IOpenGlContext, OpenGlContext>();
 
         builder.Services.AddHostedService<AstralisGameClient>();
 

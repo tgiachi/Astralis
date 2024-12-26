@@ -1,7 +1,7 @@
 using System.Numerics;
 using Silk.NET.OpenGL;
 
-namespace Astralis.Game.Client.Core;
+namespace Astralis.Game.Client.Core.Shaders;
 
 public class ComputeShader : IDisposable
 {

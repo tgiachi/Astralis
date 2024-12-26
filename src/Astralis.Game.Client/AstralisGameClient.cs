@@ -1,5 +1,6 @@
 using System.Drawing;
 using Astralis.Game.Client.Core;
+using Astralis.Game.Client.Interfaces.Services;
 using Microsoft.Extensions.Hosting;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
@@ -9,9 +10,9 @@ namespace Astralis.Game.Client;
 
 public class AstralisGameClient : IHostedService
 {
-    private readonly OpenGlContext _openGlContext;
+    private readonly IOpenGlContext _openGlContext;
 
-    public AstralisGameClient(OpenGlContext openGlContext)
+    public AstralisGameClient(IOpenGlContext openGlContext)
     {
         _openGlContext = openGlContext;
     }

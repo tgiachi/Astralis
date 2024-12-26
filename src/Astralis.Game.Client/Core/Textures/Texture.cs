@@ -3,7 +3,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace Astralis.Game.Client.Core;
+namespace Astralis.Game.Client.Core.Textures;
 
 public class Texture : IDisposable
 {

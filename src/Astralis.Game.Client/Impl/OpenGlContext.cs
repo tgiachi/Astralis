@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Astralis.Game.Client.Data;
+using Astralis.Game.Client.Interfaces.Services;
 using Serilog;
 using Silk.NET.GLFW;
 using Silk.NET.Input;
@@ -11,20 +12,12 @@ using Color = System.Drawing.Color;
 using Glfw = Silk.NET.GLFW.Glfw;
 using Monitor = Silk.NET.Windowing.Monitor;
 
-namespace Astralis.Game.Client.Core;
+namespace Astralis.Game.Client.Impl;
 
 public class OpenGlContext
+    : IOpenGlContext
 {
     // instance fields
-
-    private static OpenGlContext? _instance;
-
-    public static OpenGlContext Instance => _instance;
-
-    public static void Create(AstralisGameConfig config)
-    {
-        _instance = new OpenGlContext(config);
-    }
 
     public event Action<double> OnUpdateEvent;
     public event Action<double, GL> OnRenderEvent;
