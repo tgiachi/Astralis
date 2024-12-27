@@ -31,10 +31,9 @@ public class TextRenderSystem : BaseSystem<World, GL>
         };
 
         _fontSystem = new FontSystem(settings);
-        var font = File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "Assets", "Fonts", "PixelOperator.ttf"));
+        var font = File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "Assets", "Fonts", "TerminusTTF.ttf"));
         _fontSystem.AddFont(font);
     }
-
 
     public override void Update(in GL t)
     {
