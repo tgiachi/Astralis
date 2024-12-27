@@ -12,10 +12,14 @@ public class DefaultTextComponent : ITextComponent
 
     public DefaultTextComponent(string text, float x, float y, float fontSize = 32)
     {
-
-
+        Text = text;
+        Position = new Vector2(x, y);
+        FontSize = fontSize;
+        Color = new Vector4(1, 1, 1, 255);
     }
 
 
-
+    public virtual void Update(double deltaTime)
+    {
+    }
 }

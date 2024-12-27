@@ -134,7 +134,7 @@ public class OpenGlContext
         PrimaryMouse = Input.Mice.FirstOrDefault()!;
         PrimaryKeyboard.KeyDown += KeyDown;
 
-        EnableFaceCulling();
+        //EnableFaceCulling();
         EnableAntiAliasing();
         EnableBlending();
 

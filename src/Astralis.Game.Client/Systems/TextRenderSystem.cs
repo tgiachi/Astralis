@@ -14,7 +14,7 @@ namespace Astralis.Game.Client.Systems;
 
 public class TextRenderSystem : BaseSystem<World, GL>
 {
-    private readonly QueryDescription _desc = new QueryDescription().WithAny<DefaultTextComponent>();
+    private readonly QueryDescription _desc = new QueryDescription().WithAny<IPosition2dComponent, ITextComponent>();
     private readonly IOpenGlContext _context;
     private readonly TextRenderer _renderer;
     private readonly FontSystem _fontSystem;
@@ -47,21 +47,18 @@ public class TextRenderSystem : BaseSystem<World, GL>
 
         var size = font.MeasureString(text, scale);
         var origin = new Vector2(size.X / 2.0f, size.Y / 2.0f);
+
+
         _renderer.Begin();
         World.Query(
             in _desc,
-            (ref DefaultTextComponent text) => { }
+            (ref ITextComponent text) =>
+            {
+                font.DrawText(_renderer, text.Text, text.Position, new FSColor(text.Color.X, text.Color.Y, text.Color.Z, text.Color.W), 0, origin, scale);
+            }
         );
-        try
-        {
-            var a = font.DrawText(_renderer, text, new Vector2(10, 10), FSColor.Red, _rads, origin, scale);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
 
-        _rads += 0.01f;
+        font.DrawText(_renderer, text, new Vector2(400, 400), FSColor.LightCoral, 0, origin, scale);
 
         _renderer.End();
     }

@@ -76,8 +76,14 @@ public class EcsService : IEcsService
         );
         _renderGroup.Initialize();
 
-        var text = new DefaultTextComponent("Hello, World!", 100, 100);
+        _deltaTimeGroup = new Group<double>(
+            "delta_time_group",
+            new UpdateSystem(_world)
+        );
+        var text = new DefaultTextComponent("Hello, World!", 500, 100);
         var entity = CreateEntity(text);
+
+        entity.Add((IUpdateComponent)text, (ITextComponent)text);
 
         IImGuiComponent imgui = new ImGuiDefaultComponent();
 

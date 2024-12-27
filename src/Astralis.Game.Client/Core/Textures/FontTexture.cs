@@ -12,7 +12,7 @@ public unsafe class FontTexture : IDisposable
     public readonly int Height;
 
 
-    public  FontTexture(GL gl, int width, int height)
+    public FontTexture(GL gl, int width, int height)
     {
         _gl = gl;
         Width = width;

@@ -46,7 +46,39 @@ public class Shader : IDisposable
         return _gl.GetUniformBlockIndex(handle, name);
     }
 
-    public void SetUniform(string name, int value) => _gl.Uniform1(GetUniformLocation(name), value);
+    public void SetUniform(string name, int value)
+    {
+        int location = _gl.GetUniformLocation(handle, name);
+        if (location == -1)
+        {
+            throw new Exception($"{name} uniform not found on shader.");
+        }
+        _gl.Uniform1(location, value);
+        GLUtility.CheckError(_gl);
+    }
+
+    public void SetUniform(string name, float value)
+    {
+        int location = _gl.GetUniformLocation(handle, name);
+        if (location == -1)
+        {
+            throw new Exception($"{name} uniform not found on shader.");
+        }
+        _gl.Uniform1(location, value);
+        GLUtility.CheckError(_gl);
+    }
+
+    public unsafe void SetUniform(string name, Matrix4x4 value)
+    {
+        int location = _gl.GetUniformLocation(handle, name);
+        if (location == -1)
+        {
+            throw new Exception($"{name} uniform not found on shader.");
+        }
+
+        _gl.UniformMatrix4(location, 1, false, (float*)&value);
+        GLUtility.CheckError(_gl);
+    }
 
     public int GetUniformLocation(string name)
     {
@@ -72,10 +104,7 @@ public class Shader : IDisposable
         return result;
     }
 
-    public unsafe void SetUniform(string name, Matrix4x4 value) =>
-        _gl.UniformMatrix4(GetUniformLocation(name), 1, false, (float*)&value);
 
-    public void SetUniform(string name, float value) => _gl.Uniform1(GetUniformLocation(name), value);
 
     public void SetUniform(string name, Vector3 value) => _gl.Uniform3(GetUniformLocation(name), value.X, value.Y, value.Z);
 

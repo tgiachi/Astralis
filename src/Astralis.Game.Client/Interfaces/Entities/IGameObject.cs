@@ -1,6 +1,7 @@
-namespace Astralis.Game.Client.Interfaces.Objects;
+namespace Astralis.Game.Client.Interfaces.Entities;
 
 public interface IGameObject
 {
+
 
 }
