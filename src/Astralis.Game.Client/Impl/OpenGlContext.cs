@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using Astralis.Core.Interfaces.Services;
+using Astralis.Core.Server.Events.Engine;
 using Astralis.Game.Client.Data;
 using Astralis.Game.Client.Interfaces.Services;
 using Serilog;
@@ -23,6 +25,8 @@ public class OpenGlContext
     public event Action<double, GL> OnRenderEvent;
     public event Action<GL> OnStartEvent;
 
+    private readonly IEventBusService _eventBusService;
+
     private readonly ILogger _logger = Log.ForContext<OpenGlContext>();
     public IWindow Window { get; private set; }
     public IInputContext Input { get; private set; } = null!;
@@ -42,8 +46,9 @@ public class OpenGlContext
 
     private bool running = true;
 
-    public OpenGlContext(AstralisGameConfig config)
+    public OpenGlContext(AstralisGameConfig config, IEventBusService eventBusService)
     {
+        _eventBusService = eventBusService;
         //Create a window.
         var options = WindowOptions.Default;
 
@@ -130,6 +135,7 @@ public class OpenGlContext
         EnableBlending();
 
         OnStartEvent?.Invoke(Gl);
+        _eventBusService.Publish(new EngineStartedEvent());
         //        game.Start(Gl);
     }
 
