@@ -1,9 +1,11 @@
-﻿using Astralis.Core.Interfaces.Services;
+﻿using Astralis.Core.Extensions;
+using Astralis.Core.Interfaces.Services;
 using Astralis.Core.Services;
 using Astralis.Game.Client.Core;
 using Astralis.Game.Client.Data;
 using Astralis.Game.Client.Impl;
 using Astralis.Game.Client.Interfaces.Services;
+using Astralis.Game.Client.Modules;
 using Astralis.Network;
 using Astralis.Network.Client.Interfaces;
 using Astralis.Network.Client.Services;
@@ -30,6 +32,8 @@ class Program
 
         builder.Logging.ClearProviders().AddSerilog();
 
+
+        builder.Services.AddContainerModule<EcsModule>();
         builder.Services
             .AddSingleton<IEventBusService, EventBusService>()
             .AddSingleton<INetworkClient, NetworkClient>()

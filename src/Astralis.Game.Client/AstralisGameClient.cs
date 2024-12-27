@@ -1,32 +1,74 @@
-using System.Drawing;
-using Astralis.Game.Client.Core;
+
+using Astralis.Core.Interfaces.Services.Base;
+using Astralis.Core.Server.Data.Internal;
 using Astralis.Game.Client.Interfaces.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Silk.NET.Input;
-using Silk.NET.OpenGL;
-using Silk.NET.Windowing;
+using Serilog;
+
 
 namespace Astralis.Game.Client;
 
 public class AstralisGameClient : IHostedService
 {
-    private readonly IOpenGlContext _openGlContext;
+    private readonly ILogger _logger = Log.ForContext<AstralisGameClient>();
 
-    public AstralisGameClient(IOpenGlContext openGlContext)
+    private readonly IOpenGlContext _openGlContext;
+    private readonly IServiceProvider _serviceProvider;
+
+    private readonly List<SystemServiceData> _systemServiceData;
+
+    public AstralisGameClient(
+        IOpenGlContext openGlContext, List<SystemServiceData> systemServiceData, IServiceProvider serviceProvider
+    )
     {
         _openGlContext = openGlContext;
+        _systemServiceData = systemServiceData;
+        _serviceProvider = serviceProvider;
     }
 
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
         Task.Run(() => _openGlContext.Run(), cancellationToken);
-        return Task.CompletedTask;
+
+        await StartServicesAsync();
+    }
+
+
+    private async Task StartServicesAsync()
+    {
+        foreach (var systemServiceData in _systemServiceData.OrderBy(s => s.Priority))
+        {
+            var service = _serviceProvider.GetRequiredService(systemServiceData.InterfaceType);
+
+            _logger.Information("Starting service {ServiceType}", service.GetType().Name);
+
+            if (service is IAstralisSystemService astralisSystemService)
+            {
+                await astralisSystemService.StartAsync();
+            }
+        }
+    }
+
+    private async Task StopServicesAsync()
+    {
+        foreach (var systemServiceData in _systemServiceData.OrderByDescending(s => s.Priority))
+        {
+            var service = _serviceProvider.GetRequiredService(systemServiceData.InterfaceType);
+
+            _logger.Information("Stopping service {ServiceType}", service.GetType().Name);
+            if (service is IAstralisSystemService astralisSystemService)
+            {
+                await astralisSystemService.StopAsync();
+            }
+        }
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _openGlContext.Stop();
-        return Task.CompletedTask;
+
+        return StopServicesAsync();
     }
 }

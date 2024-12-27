@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Astralis.Game.Client.Interfaces.Objects.Components;
+namespace Astralis.Game.Client.Interfaces.Ecs.Components;
 
 public interface I2dPositionComponent
 {

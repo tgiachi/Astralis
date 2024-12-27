@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Astralis.Core.Server\Astralis.Core.Server.csproj" />
         <ProjectReference Include="..\Astralis.Core\Astralis.Core.csproj"/>
         <ProjectReference Include="..\Astralis.Network.Client\Astralis.Network.Client.csproj"/>
         <ProjectReference Include="..\Astralis.Network\Astralis.Network.csproj"/>
@@ -31,6 +32,7 @@
 
     <ItemGroup>
       <Folder Include="Assets\" />
+      <Folder Include="Interfaces\Ecs\" />
     </ItemGroup>
 
     <ItemGroup>
