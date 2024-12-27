@@ -11,6 +11,9 @@ public class Texture : IDisposable
     private readonly GL _gl;
     private bool disposed = false;
 
+    public int Width { get; private set; }
+    public int Height { get; private set; }
+
 
     public unsafe Texture(GL gl, string path)
     {
@@ -68,6 +71,10 @@ public class Texture : IDisposable
     {
         //Saving the gl instance.
         _gl = gl;
+
+        //Setting the width and height of the texture.
+        Width = (int)width;
+        Height = (int)height;
 
         //Generating the opengl handle;
         Handle = this._gl.GenTexture();

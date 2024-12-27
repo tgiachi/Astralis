@@ -13,7 +13,7 @@ public class DefaultTextComponent : ITextComponent
     public DefaultTextComponent(string text, float x, float y, float fontSize = 32)
     {
 
-        
+
     }
 
 

@@ -1,11 +1,19 @@
-#version 330 core
-in vec2 TexCoords;
-out vec4 color;
-uniform sampler2D text;
-uniform vec3 textColor;
+#ifdef GL_ES
+#define LOWP lowp
+precision mediump float;
+#else
+#define LOWP
+#endif
+
+
+// Uniforms
+uniform sampler2D TextureSampler;
+
+// Varyings
+varying vec4 v_color;
+varying vec2 v_texCoords;
 
 void main()
 {
-    vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);
-    color = vec4(textColor, 1.0) * sampled;
+    gl_FragColor = v_color * texture2D(TextureSampler, v_texCoords);
 }

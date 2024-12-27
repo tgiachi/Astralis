@@ -1,4 +1,5 @@
 using System.Numerics;
+using Astralis.Game.Client.Core.Utils;
 using Silk.NET.OpenGL;
 
 namespace Astralis.Game.Client.Core.Shaders;
@@ -61,6 +62,14 @@ public class Shader : IDisposable
         }
 
         return _uniformLocations[name];
+    }
+
+    public int GetAttribLocation(string attribName)
+    {
+        var result = _gl.GetAttribLocation(handle, attribName);
+
+        GLUtility.CheckError(_gl);
+        return result;
     }
 
     public unsafe void SetUniform(string name, Matrix4x4 value) =>

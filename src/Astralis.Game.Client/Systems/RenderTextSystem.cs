@@ -20,6 +20,7 @@ public class RenderTextSystem : BaseSystem<World, GL>
         _context = context;
     }
 
+
     public override void Update(in GL t)
     {
         World.Query(
