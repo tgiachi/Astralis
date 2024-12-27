@@ -3,9 +3,8 @@ using Arch.System;
 using Astralis.Core.Attributes.Services;
 using Astralis.Core.Interfaces.Services;
 using Astralis.Core.Server.Events.Engine;
-
 using Astralis.Game.Client.Interfaces.Services;
-
+using Astralis.Game.Client.Systems;
 using Schedulers;
 using Serilog;
 using Silk.NET.OpenGL;
@@ -70,6 +69,7 @@ public class EcsService : IEcsService
 
     public Task StartAsync()
     {
+        _renderGroup = new Group<GL>("render_group", new RenderTextSystem(_world, _openGlContext));
         return Task.CompletedTask;
     }
 
@@ -85,5 +85,10 @@ public class EcsService : IEcsService
         _deltaTimeGroup?.Dispose();
         _renderGroup?.Dispose();
         _world.Dispose();
+    }
+
+    public Entity CreateEntity(params object[] components)
+    {
+        return _world.Create(components);
     }
 }

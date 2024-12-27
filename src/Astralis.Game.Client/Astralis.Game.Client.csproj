@@ -18,6 +18,8 @@
     <ItemGroup>
         <PackageReference Include="Arch" Version="1.3.3-alpha" />
         <PackageReference Include="Arch.System" Version="1.0.5" />
+        <PackageReference Include="FontStash.NET" Version="1.1.2" />
+        <PackageReference Include="FontStash.NET.GL.Legacy" Version="1.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
         <PackageReference Include="Serilog" Version="4.2.0"/>
         <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0"/>
@@ -31,7 +33,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Assets\" />
       <Folder Include="Interfaces\Ecs\" />
     </ItemGroup>
 
