@@ -10,9 +10,12 @@ public class Shader : IDisposable
     private bool disposed = false;
     private readonly Dictionary<string, int> _uniformLocations = new();
 
-    public Shader(GL gl, string vertexPath, string fragmentPath)
+    public Shader(GL gl, string shaderPath)
     {
         _gl = gl;
+
+        var vertexPath = Path.Combine(shaderPath, "VertexShader.glsl");
+        var fragmentPath = Path.Combine(shaderPath, "FragmentShader.glsl");
 
         uint vertex = LoadShader(ShaderType.VertexShader, vertexPath);
         uint fragment = LoadShader(ShaderType.FragmentShader, fragmentPath);

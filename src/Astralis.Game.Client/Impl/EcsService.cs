@@ -1,8 +1,11 @@
 using Arch.Core;
+using Arch.Core.Extensions;
 using Arch.System;
 using Astralis.Core.Attributes.Services;
 using Astralis.Core.Interfaces.Services;
 using Astralis.Core.Server.Events.Engine;
+using Astralis.Game.Client.Components;
+using Astralis.Game.Client.Components.Ecs;
 using Astralis.Game.Client.Interfaces.Services;
 using Astralis.Game.Client.Systems;
 using Schedulers;
@@ -33,7 +36,7 @@ public class EcsService : IEcsService
         var config = new JobScheduler.Config
         {
             ThreadPrefixName = "ECS",
-            ThreadCount = 3,
+            ThreadCount = 0,
             MaxExpectedConcurrentJobs = 64,
             StrictAllocationMode = false
         };
@@ -50,26 +53,41 @@ public class EcsService : IEcsService
 
     private void OnRender(double deltaTime, GL gl)
     {
-        _renderGroup?.BeforeUpdate(gl);
-        _renderGroup?.Update(gl);
-        _renderGroup?.AfterUpdate(gl);
+        _renderGroup?.BeforeUpdate(in gl);
+        _renderGroup?.Update(in gl);
+        _renderGroup?.AfterUpdate(in gl);
     }
 
     private void OnUpdate(double deltaTime)
     {
-        _deltaTimeGroup?.BeforeUpdate(deltaTime);
-        _deltaTimeGroup?.Update(deltaTime);
-        _deltaTimeGroup?.AfterUpdate(deltaTime);
+        _deltaTimeGroup?.BeforeUpdate(in deltaTime);
+        _deltaTimeGroup?.Update(in deltaTime);
+        _deltaTimeGroup?.AfterUpdate(in deltaTime);
     }
 
     private void OnEngineStarted(EngineStartedEvent obj)
     {
         _logger.Information("Starting ECS service...");
+        var text = new DefaultTextComponent("Hello, World!", 100, 100);
+        var entity = CreateEntity(text);
+
+        IImGuiComponent imgui = new ImGuiDefaultComponent();
+
+        var entity2 = _world.Create();
+
+        entity2.Add(imgui);
+
+        var isA = entity2.Has(typeof(IImGuiComponent));
     }
 
     public Task StartAsync()
     {
-        _renderGroup = new Group<GL>("render_group", new RenderTextSystem(_world, _openGlContext));
+        _renderGroup = new Group<GL>(
+            "render_group",
+            new RenderTextSystem(_world, _openGlContext),
+            new ImguiRenderSystem(_world)
+        );
+        _renderGroup.Initialize();
         return Task.CompletedTask;
     }
 
@@ -89,6 +107,14 @@ public class EcsService : IEcsService
 
     public Entity CreateEntity(params object[] components)
     {
-        return _world.Create(components);
+        var entity = _world.Create();
+
+        foreach (var component in components)
+        {
+            entity.Add(component);
+        }
+
+        _logger.Debug("Created entity {EntityId}", entity.Id);
+        return entity;
     }
 }
