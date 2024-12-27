@@ -68,6 +68,14 @@ public class EcsService : IEcsService
     private void OnEngineStarted(EngineStartedEvent obj)
     {
         _logger.Information("Starting ECS service...");
+
+        _renderGroup = new Group<GL>(
+            "render_group",
+            new TextRenderSystem(_world, _openGlContext),
+            new ImguiRenderSystem(_world)
+        );
+        _renderGroup.Initialize();
+
         var text = new DefaultTextComponent("Hello, World!", 100, 100);
         var entity = CreateEntity(text);
 
@@ -82,12 +90,7 @@ public class EcsService : IEcsService
 
     public Task StartAsync()
     {
-        _renderGroup = new Group<GL>(
-            "render_group",
-            new RenderTextSystem(_world, _openGlContext),
-            new ImguiRenderSystem(_world)
-        );
-        _renderGroup.Initialize();
+
         return Task.CompletedTask;
     }
 

@@ -209,7 +209,7 @@ public class OpenGlContext
     {
         Gl.Enable(EnableCap.DepthTest);
         Gl.ClearColor(ClearColor);
-        Gl.Clear((uint)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+        Gl.Clear((uint)(ClearBufferMask.ColorBufferBit));
 
         OnRenderEvent?.Invoke(delta, Gl);
         // game.Draw(Gl, delta);

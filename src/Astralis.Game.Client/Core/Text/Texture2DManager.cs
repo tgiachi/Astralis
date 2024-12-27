@@ -2,7 +2,7 @@ using System.Drawing;
 using Astralis.Game.Client.Core.Textures;
 using FontStashSharp.Interfaces;
 using Silk.NET.OpenGL;
-using Texture = Astralis.Game.Client.Core.Textures.Texture;
+
 
 namespace Astralis.Game.Client.Core.Text;
 
@@ -19,7 +19,7 @@ public class Texture2DManager : ITexture2DManager
 
     public Point GetTextureSize(object texture)
     {
-        var t = (Texture)texture;
+        var t = (FontTexture)texture;
         return new Point(t.Width, t.Height);
     }
 
