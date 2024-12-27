@@ -10,7 +10,9 @@ public class DefaultTextComponent : ITextComponent
     public string Text { get; set; }
     public Vector4 Color { get; set; }
 
-    public DefaultTextComponent(string text, float x, float y, float fontSize = 32)
+    public float Rotation { get; set; } = 0;
+
+    public DefaultTextComponent(string text, float x, float y, float fontSize = 16)
     {
         Text = text;
         Position = new Vector2(x, y);

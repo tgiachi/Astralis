@@ -80,7 +80,7 @@ public class EcsService : IEcsService
             "delta_time_group",
             new UpdateSystem(_world)
         );
-        var text = new DefaultTextComponent("Hello, World!", 500, 100);
+        var text = new DefaultTextComponent("Ciao, sono tommy", 500, 100);
         var entity = CreateEntity(text);
 
         entity.Add((IUpdateComponent)text, (ITextComponent)text);
