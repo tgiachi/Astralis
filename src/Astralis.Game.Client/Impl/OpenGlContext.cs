@@ -21,6 +21,8 @@ public class OpenGlContext
 {
     // instance fields
 
+    public AstralisGameConfig Config { get; }
+
     public event Action<double> OnUpdateEvent;
     public event Action<double, GL> OnRenderEvent;
     public event Action<GL> OnStartEvent;
@@ -34,12 +36,13 @@ public class OpenGlContext
     public IKeyboard PrimaryKeyboard { get; private set; } = null!;
     public IMouse PrimaryMouse { get; private set; } = null!;
 
+
     private ImGuiController imGuiController = null!;
 
     public uint uboWorld;
     public uint uboUi;
 
-    public static readonly Color DEFAULT_CLEAR_COLOR = Color.Lavender;
+    public static readonly Color DEFAULT_CLEAR_COLOR = Color.Black;
     public Color ClearColor = DEFAULT_CLEAR_COLOR;
 
     private Glfw glfw;
@@ -48,6 +51,7 @@ public class OpenGlContext
 
     public OpenGlContext(AstralisGameConfig config, IEventBusService eventBusService)
     {
+        Config = config;
         _eventBusService = eventBusService;
         //Create a window.
         var options = WindowOptions.Default;
@@ -207,9 +211,9 @@ public class OpenGlContext
 
     private void OnRender(double delta)
     {
-        Gl.Enable(EnableCap.DepthTest);
+        //Gl.Enable(EnableCap.DepthTest);
         Gl.ClearColor(ClearColor);
-        Gl.Clear((uint)(ClearBufferMask.ColorBufferBit));
+        Gl.Clear((uint)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 
         OnRenderEvent?.Invoke(delta, Gl);
         // game.Draw(Gl, delta);

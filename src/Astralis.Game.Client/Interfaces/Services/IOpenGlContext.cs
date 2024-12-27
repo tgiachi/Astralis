@@ -1,3 +1,4 @@
+using Astralis.Game.Client.Data;
 using Silk.NET.GLFW;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
@@ -7,6 +8,7 @@ namespace Astralis.Game.Client.Interfaces.Services;
 
 public interface IOpenGlContext
 {
+    AstralisGameConfig Config { get; }
     event Action<double> OnUpdateEvent;
     event Action<double, GL> OnRenderEvent;
     event Action<GL> OnStartEvent;

@@ -2,6 +2,7 @@ using System.Numerics;
 using Astralis.Game.Client.Core.Buffer;
 using Astralis.Game.Client.Core.Textures;
 using Astralis.Game.Client.Core.Utils;
+using Astralis.Game.Client.Interfaces.Services;
 using FontStashSharp.Interfaces;
 using Silk.NET.OpenGL;
 using Shader = Astralis.Game.Client.Core.Shaders.Shader;
@@ -11,6 +12,7 @@ namespace Astralis.Game.Client.Core.Text;
 public class TextRenderer : IFontStashRenderer2, IDisposable
 {
     private readonly GL _gl;
+    private readonly IOpenGlContext _context;
     private const int MAX_SPRITES = 2048;
     private const int MAX_VERTICES = MAX_SPRITES * 4;
     private const int MAX_INDICES = MAX_SPRITES * 6;
@@ -30,19 +32,20 @@ public class TextRenderer : IFontStashRenderer2, IDisposable
     private static readonly short[] indexData = GenerateIndexArray();
 
 
-    public unsafe TextRenderer(GL gl)
+    public unsafe TextRenderer(IOpenGlContext context)
     {
-        _gl = gl;
-        _textureManager = new Texture2DManager(gl);
+        _context = context;
+        _gl = context.Gl;
+        _textureManager = new Texture2DManager(_gl);
 
-        _vertexBuffer = new BufferObject<VertexPositionColorTexture>(gl, MAX_VERTICES, BufferTargetARB.ArrayBuffer, true);
-        _indexBuffer = new BufferObject<short>(gl, indexData.Length, BufferTargetARB.ElementArrayBuffer, false);
+        _vertexBuffer = new BufferObject<VertexPositionColorTexture>(_gl, MAX_VERTICES, BufferTargetARB.ArrayBuffer, true);
+        _indexBuffer = new BufferObject<short>(_gl, indexData.Length, BufferTargetARB.ElementArrayBuffer, false);
         _indexBuffer.SetData(indexData, 0, indexData.Length);
 
-        _shader = new Shader(gl, Path.Combine(Directory.GetCurrentDirectory(), "Assets", "Shaders", "Text"));
+        _shader = new Shader(_gl, Path.Combine(Directory.GetCurrentDirectory(), "Assets", "Shaders", "Text"));
         _shader.Use();
 
-        _vao = new VertexArrayObject(gl, sizeof(VertexPositionColorTexture));
+        _vao = new VertexArrayObject(_gl, sizeof(VertexPositionColorTexture));
         _vao.Bind();
 
         var location = _shader.GetAttribLocation("a_position");
@@ -84,7 +87,7 @@ public class TextRenderer : IFontStashRenderer2, IDisposable
         _shader.Use();
         _shader.SetUniform("TextureSampler", 0);
 
-        var transform = Matrix4x4.CreateOrthographicOffCenter(0, 1200, 800, 0, 0, -1);
+        var transform = Matrix4x4.CreateOrthographicOffCenter(0, _context.Config.WindowSize.X, _context.Config.WindowSize.Y, 0, 0, -1);
         _shader.SetUniform("MatrixTransform", transform);
 
         _vao.Bind();

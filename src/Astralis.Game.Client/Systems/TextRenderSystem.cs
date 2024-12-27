@@ -18,11 +18,12 @@ public class TextRenderSystem : BaseSystem<World, GL>
     private readonly IOpenGlContext _context;
     private readonly TextRenderer _renderer;
     private readonly FontSystem _fontSystem;
+    private static float _rads = 0.0f;
 
     public TextRenderSystem(World world, IOpenGlContext context) : base(world)
     {
         _context = context;
-        _renderer = new TextRenderer(_context.Gl);
+        _renderer = new TextRenderer(_context);
 
         var settings = new FontSystemSettings
         {
@@ -32,15 +33,14 @@ public class TextRenderSystem : BaseSystem<World, GL>
         };
 
         _fontSystem = new FontSystem(settings);
-        _fontSystem.AddFont(
-            File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "Assets", "Fonts", "PixelOperator.ttf"))
-        );
+        var font = File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "Assets", "Fonts", "PixelOperator.ttf"));
+        _fontSystem.AddFont(font);
     }
 
 
     public override void Update(in GL t)
     {
-        var text = "The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog";
+        var text = "Hello World!";
         var scale = new Vector2(2, 2);
 
         var font = _fontSystem.GetFont(32);
@@ -54,12 +54,14 @@ public class TextRenderSystem : BaseSystem<World, GL>
         );
         try
         {
-            font.DrawText(_renderer, text, new Vector2(10, 10), FSColor.Black, 0.0f, origin, scale);
+            var a = font.DrawText(_renderer, text, new Vector2(10, 10), FSColor.Red, _rads, origin, scale);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
+
+        _rads += 0.01f;
 
         _renderer.End();
     }
