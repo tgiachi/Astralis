@@ -22,7 +22,6 @@ public class OpenGlContext
     // instance fields
 
     public AstralisGameConfig Config { get; }
-
     public event Action<double> OnUpdateEvent;
     public event Action<double, GL> OnRenderEvent;
     public event Action<GL> OnStartEvent;
@@ -106,6 +105,8 @@ public class OpenGlContext
 
     private unsafe void OnLoad()
     {
+        // view thread id
+        _logger.Information("View thread id: {ThreadId}", Environment.CurrentManagedThreadId);
         //Set-up input context.
         Input = Window.CreateInput();
         Gl = Window.CreateOpenGL();
@@ -211,7 +212,7 @@ public class OpenGlContext
 
     private void OnRender(double delta)
     {
-        //Gl.Enable(EnableCap.DepthTest);
+        Gl.Enable(EnableCap.DepthTest);
         Gl.ClearColor(ClearColor);
         Gl.Clear((uint)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 

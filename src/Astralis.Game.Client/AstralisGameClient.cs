@@ -14,9 +14,11 @@ public class AstralisGameClient : IHostedService
     private readonly ILogger _logger = Log.ForContext<AstralisGameClient>();
 
     private readonly IOpenGlContext _openGlContext;
-    private readonly IServiceProvider _serviceProvider;
+    private static  IServiceProvider _serviceProvider;
 
     private readonly List<SystemServiceData> _systemServiceData;
+
+    public static TService GetService<TService>() => _serviceProvider.GetRequiredService<TService>();
 
     public AstralisGameClient(
         IOpenGlContext openGlContext, List<SystemServiceData> systemServiceData, IServiceProvider serviceProvider

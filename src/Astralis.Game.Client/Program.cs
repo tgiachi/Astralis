@@ -1,5 +1,8 @@
 ﻿using Astralis.Core.Extensions;
 using Astralis.Core.Interfaces.Services;
+using Astralis.Core.Server.Extensions;
+using Astralis.Core.Server.Interfaces.Services.System;
+using Astralis.Core.Server.Services;
 using Astralis.Core.Services;
 using Astralis.Game.Client.Core;
 using Astralis.Game.Client.Data;
@@ -28,6 +31,8 @@ class Program
             .MinimumLevel.Debug()
             .CreateLogger();
 
+        //Log.Logger.Information("View thread id: {ThreadId}", Environment.CurrentManagedThreadId);
+
         var builder = Host.CreateApplicationBuilder(args);
 
         builder.Logging.ClearProviders().AddSerilog();
@@ -41,12 +46,17 @@ class Program
             .AddSingleton(new AstralisGameConfig())
             .AddSingleton<IOpenGlContext, OpenGlContext>();
 
+
+        builder.Services
+            .AddSystemService<IVariablesService, VariablesService>()
+            .AddSystemService<IVersionService, VersionService>(10);
+
         builder.Services.AddHostedService<AstralisGameClient>();
 
         Log.Logger.Information("Astralis Game Client starting up...");
 
         var app = builder.Build();
 
-        await app.RunAsync();
+        app.RunAsync();
     }
 }

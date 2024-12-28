@@ -6,7 +6,7 @@ using Astralis.Core.Server.Events.Variables;
 using Astralis.Core.Server.Interfaces.Services.System;
 using Serilog;
 
-namespace Astralis.Server.Services;
+namespace Astralis.Core.Server.Services;
 
 public partial class VariablesService
     : IVariablesService, IEventBusListener<AddVariableEvent>, IEventBusListener<AddVariableBuilderEvent>

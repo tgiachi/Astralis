@@ -80,7 +80,7 @@ public class EcsService : IEcsService
             "delta_time_group",
             new UpdateSystem(_world)
         );
-        var text = new DefaultTextComponent("Ciao, sono tommy", 500, 100);
+        var text = new DefaultTextComponent("Ciao, sono tommy la version e' {app_version}", 500, 100);
         var entity = CreateEntity(text);
 
         entity.Add((IUpdateComponent)text, (ITextComponent)text);
@@ -93,6 +93,8 @@ public class EcsService : IEcsService
 
         var isA = entity2.Has(typeof(IImGuiComponent));
     }
+
+
 
     public Task StartAsync()
     {
@@ -123,7 +125,7 @@ public class EcsService : IEcsService
             entity.Add(component);
         }
 
-        _logger.Debug("Created entity {EntityId}", entity.Id);
+        _logger.Debug("Created entity id: {EntityId}", entity.Id);
         return entity;
     }
 }

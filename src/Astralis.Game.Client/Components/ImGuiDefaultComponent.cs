@@ -12,6 +12,8 @@ public class ImGuiDefaultComponent : IImGuiComponent
         ImGui.Text("Hello, world!");
 
         ImGui.End();
+
+        ImGui.ShowDemoWindow();
     }
 
     public object[] GetComponents()
