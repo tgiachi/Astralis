@@ -6,6 +6,7 @@ using Astralis.Core.Interfaces.Services;
 using Astralis.Core.Server.Events.Engine;
 using Astralis.Game.Client.Components;
 using Astralis.Game.Client.Components.Ecs;
+using Astralis.Game.Client.Data.Events.Ecs;
 using Astralis.Game.Client.Interfaces.Services;
 using Astralis.Game.Client.Systems;
 using Schedulers;
@@ -14,23 +15,23 @@ using Silk.NET.OpenGL;
 
 namespace Astralis.Game.Client.Impl;
 
-[OrionSystemService(1)]
 public class EcsService : IEcsService
 {
     private readonly ILogger _logger = Log.ForContext<EcsService>();
-    private readonly IOpenGlContext _openGlContext;
+
     private readonly IEventBusService _eventBusService;
     private Group<double> _deltaTimeGroup;
     private Group<GL> _renderGroup;
     private readonly World _world;
 
     public EcsService(
-        World world, IEventBusService eventBusService, IOpenGlContext openGlContext
+        IEventBusService eventBusService
     )
     {
-        _world = world;
+        _world = World.Create();
         _eventBusService = eventBusService;
-        _openGlContext = openGlContext;
+
+        _eventBusService.Subscribe<AddEcsEntityEvent>(OnAddEcsEntity);
 
 
         var config = new JobScheduler.Config
@@ -46,9 +47,11 @@ public class EcsService : IEcsService
         World.SharedJobScheduler = scheduler;
 
         _eventBusService.Subscribe<EngineStartedEvent>(OnEngineStarted);
+    }
 
-        _openGlContext.OnUpdateEvent += OnUpdate;
-        _openGlContext.OnRenderEvent += OnRender;
+    private void OnAddEcsEntity(AddEcsEntityEvent obj)
+    {
+        CreateEntity(obj.Components);
     }
 
     private void OnRender(double deltaTime, GL gl)
@@ -69,9 +72,12 @@ public class EcsService : IEcsService
     {
         _logger.Information("Starting ECS service...");
 
+        AstralisGameInstances.OpenGlContext.OnUpdateEvent += OnUpdate;
+        AstralisGameInstances.OpenGlContext.OnRenderEvent += OnRender;
+
         _renderGroup = new Group<GL>(
             "render_group",
-            new TextRenderSystem(_world, _openGlContext),
+            new TextRenderSystem(_world, AstralisGameInstances.OpenGlContext),
             new ImguiRenderSystem(_world)
         );
         _renderGroup.Initialize();
@@ -95,10 +101,8 @@ public class EcsService : IEcsService
     }
 
 
-
     public Task StartAsync()
     {
-
         return Task.CompletedTask;
     }
 
@@ -109,8 +113,8 @@ public class EcsService : IEcsService
 
     public void Dispose()
     {
-        _openGlContext.OnUpdateEvent -= OnUpdate;
-        _openGlContext.OnRenderEvent -= OnRender;
+        AstralisGameInstances.OpenGlContext.OnUpdateEvent -= OnUpdate;
+        AstralisGameInstances.OpenGlContext.OnRenderEvent -= OnRender;
         _deltaTimeGroup?.Dispose();
         _renderGroup?.Dispose();
         _world.Dispose();

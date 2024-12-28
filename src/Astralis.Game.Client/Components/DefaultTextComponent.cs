@@ -14,9 +14,10 @@ public class DefaultTextComponent : ITextComponent
     public string SourceText { get; set; }
 
     private readonly IVariablesService _variablesService;
+
     public DefaultTextComponent(string text, float x, float y, float fontSize = 16)
     {
-        _variablesService = AstralisGameClient.GetService<IVariablesService>();
+        _variablesService = AstralisGameInstances.VariablesService();
         SourceText = text;
         Text = text;
         Position = new Vector2(x, y);
