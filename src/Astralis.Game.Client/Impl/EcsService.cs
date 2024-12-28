@@ -7,6 +7,7 @@ using Astralis.Core.Server.Events.Engine;
 using Astralis.Game.Client.Components;
 using Astralis.Game.Client.Components.Ecs;
 using Astralis.Game.Client.Data.Events.Ecs;
+using Astralis.Game.Client.Interfaces.Entities;
 using Astralis.Game.Client.Interfaces.Services;
 using Astralis.Game.Client.Systems;
 using Schedulers;
@@ -78,7 +79,8 @@ public class EcsService : IEcsService
         _renderGroup = new Group<GL>(
             "render_group",
             new TextRenderSystem(_world, AstralisGameInstances.OpenGlContext),
-            new ImguiRenderSystem(_world)
+            new ImguiRenderSystem(_world),
+            new DebugRenderSystem(_world)
         );
         _renderGroup.Initialize();
 
@@ -89,7 +91,7 @@ public class EcsService : IEcsService
         var text = new TextComponent("Ciao, sono tommy la version e' {app_version}", 500, 100);
         var entity = CreateEntity(text);
 
-        entity.Add((IUpdateComponent)text, (ITextComponent)text);
+        entity.Add((IUpdateComponent)text, (ITextComponent)text, (IDebuggableComponent)text);
 
         IImGuiComponent imgui = new ImGuiComponent();
 
@@ -98,6 +100,13 @@ public class EcsService : IEcsService
         entity2.Add(imgui);
 
         var isA = entity2.Has(typeof(IImGuiComponent));
+
+        var text2 = new TextComponent("Ciao!!!!", 500, 200);
+        AddEntity(text2);
+
+        text2.Entity.Add((IUpdateComponent)text2, (ITextComponent)text2, (IDebuggableComponent)text2);
+
+        _logger.Information("ECS service started");
     }
 
 
@@ -118,6 +127,20 @@ public class EcsService : IEcsService
         _deltaTimeGroup?.Dispose();
         _renderGroup?.Dispose();
         _world.Dispose();
+    }
+
+    public void AddEntity<TEntity>(TEntity entity, params object[] components) where TEntity : IGameObject
+    {
+        var newEntity = _world.Create();
+
+        entity.Entity = newEntity;
+
+        foreach (var component in components)
+        {
+            newEntity.Add(component);
+        }
+
+        _logger.Debug("Created entity id: {EntityId}", newEntity.Id);
     }
 
     public Entity CreateEntity(params object[] components)

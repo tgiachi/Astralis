@@ -1,10 +1,12 @@
+using Astralis.Game.Client.Components.Base;
 using Astralis.Game.Client.Components.Ecs;
 using ImGuiNET;
 
 namespace Astralis.Game.Client.Components;
 
-public class ImGuiComponent : IImGuiComponent
+public class ImGuiComponent : BaseGameObject ,IImGuiComponent
 {
+    public string Id { get; set; }
     public void Render()
     {
         ImGui.Begin("Test");
@@ -13,4 +15,6 @@ public class ImGuiComponent : IImGuiComponent
 
         ImGui.End();
     }
+
+
 }

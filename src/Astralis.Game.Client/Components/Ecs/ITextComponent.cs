@@ -1,5 +1,6 @@
 using System.Numerics;
 
+
 namespace Astralis.Game.Client.Components.Ecs;
 
 public interface ITextComponent : IPosition2dComponent, IUpdateComponent
