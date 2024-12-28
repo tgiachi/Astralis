@@ -1,3 +1,5 @@
+using System.Numerics;
+using Astralis.Core.Numerics;
 using Astralis.Game.Client.Data;
 using Silk.NET.GLFW;
 using Silk.NET.Input;
@@ -22,4 +24,6 @@ public interface IOpenGlContext
     unsafe void SetCursorMode(CursorModeValue cursorMode);
     bool CursorIsNotAvailable();
     unsafe CursorModeValue GetCursorMode();
+
+    Vector2Int GetWindowSize();
 }

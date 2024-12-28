@@ -26,7 +26,6 @@ public class TextRenderer : IFontStashRenderer2, IDisposable
     private int _vertexIndex = 0;
 
     private readonly Texture2DManager _textureManager;
-
     public ITexture2DManager TextureManager => _textureManager;
 
     private static readonly short[] indexData = GenerateIndexArray();
@@ -87,7 +86,14 @@ public class TextRenderer : IFontStashRenderer2, IDisposable
         _shader.Use();
         _shader.SetUniform("TextureSampler", 0);
 
-        var transform = Matrix4x4.CreateOrthographicOffCenter(0, _context.Config.WindowSize.X, _context.Config.WindowSize.Y, 0, 0, -1);
+        var transform = Matrix4x4.CreateOrthographicOffCenter(
+            0,
+            _context.Config.WindowSize.X,
+            _context.Config.WindowSize.Y,
+            0,
+            0,
+            -1
+        );
         _shader.SetUniform("MatrixTransform", transform);
 
         _vao.Bind();

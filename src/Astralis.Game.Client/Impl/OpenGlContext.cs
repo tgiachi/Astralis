@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Astralis.Core.Interfaces.Services;
+using Astralis.Core.Numerics;
 using Astralis.Core.Server.Events.Engine;
 using Astralis.Game.Client.Data;
 using Astralis.Game.Client.Interfaces.Services;
@@ -247,6 +248,11 @@ public class OpenGlContext
     {
         return (CursorModeValue)glfw
             .GetInputMode((WindowHandle*)Window.Handle, CursorStateAttribute.Cursor);
+    }
+
+    public Vector2Int GetWindowSize()
+    {
+        return new Vector2Int(Window.Size.X, Window.Size.Y);
     }
 
     private void CloseWindow()

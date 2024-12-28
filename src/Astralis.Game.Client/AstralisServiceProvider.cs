@@ -13,6 +13,7 @@ namespace Astralis.Game.Client;
 [Singleton(typeof(IVariablesService), typeof(VariablesService))]
 [Singleton(typeof(IVersionService), typeof(VersionService))]
 [Singleton(typeof(IEcsService), typeof(EcsService))]
+[Singleton(typeof(IFontManagerService), typeof(FontManagerService))]
 public partial class AstralisServiceProvider
 {
 
