@@ -86,12 +86,12 @@ public class EcsService : IEcsService
             "delta_time_group",
             new UpdateSystem(_world)
         );
-        var text = new DefaultTextComponent("Ciao, sono tommy la version e' {app_version}", 500, 100);
+        var text = new TextComponent("Ciao, sono tommy la version e' {app_version}", 500, 100);
         var entity = CreateEntity(text);
 
         entity.Add((IUpdateComponent)text, (ITextComponent)text);
 
-        IImGuiComponent imgui = new ImGuiDefaultComponent();
+        IImGuiComponent imgui = new ImGuiComponent();
 
         var entity2 = _world.Create();
 

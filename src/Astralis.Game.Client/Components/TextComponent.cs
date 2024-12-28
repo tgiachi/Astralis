@@ -4,7 +4,7 @@ using Astralis.Game.Client.Components.Ecs;
 
 namespace Astralis.Game.Client.Components;
 
-public class DefaultTextComponent : ITextComponent
+public class TextComponent : ITextComponent
 {
     public Vector2 Position { get; set; }
     public float FontSize { get; set; }
@@ -15,7 +15,7 @@ public class DefaultTextComponent : ITextComponent
 
     private readonly IVariablesService _variablesService;
 
-    public DefaultTextComponent(string text, float x, float y, float fontSize = 16)
+    public TextComponent(string text, float x, float y, float fontSize = 16)
     {
         _variablesService = AstralisGameInstances.VariablesService();
         SourceText = text;
