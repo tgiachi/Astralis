@@ -80,6 +80,7 @@ public class OpenGlContext
 
         options.VSync = config.EnableVSync;
         options.API = new GraphicsAPI(ContextAPI.OpenGL, new APIVersion(4, 3));
+        _logger.Information("View thread id: {ThreadId}", Environment.CurrentManagedThreadId);
         Window = Silk.NET.Windowing.Window.Create(options);
 
         //Assign events.
@@ -106,7 +107,7 @@ public class OpenGlContext
     private unsafe void OnLoad()
     {
         // view thread id
-        _logger.Information("View thread id: {ThreadId}", Environment.CurrentManagedThreadId);
+
         //Set-up input context.
         Input = Window.CreateInput();
         Gl = Window.CreateOpenGL();

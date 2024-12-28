@@ -24,14 +24,16 @@ namespace Astralis.Game.Client;
 
 class Program
 {
+    private static IOpenGlContext _openGlContext = null!;
     public static async Task Main(string[] args)
     {
+
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
             .MinimumLevel.Debug()
             .CreateLogger();
 
-        //Log.Logger.Information("View thread id: {ThreadId}", Environment.CurrentManagedThreadId);
+        Log.Logger.Information("View thread id: {ThreadId}", Environment.CurrentManagedThreadId);
 
         var builder = Host.CreateApplicationBuilder(args);
 
@@ -43,8 +45,9 @@ class Program
             .AddSingleton<IEventBusService, EventBusService>()
             .AddSingleton<INetworkClient, NetworkClient>()
             .AddSingleton<ITextureManagerService, TextureManagerService>()
-            .AddSingleton(new AstralisGameConfig())
-            .AddSingleton<IOpenGlContext, OpenGlContext>();
+            .AddSingleton(provider => _openGlContext)
+            .AddSingleton(new AstralisGameConfig());
+//            .AddSingleton<IOpenGlContext, OpenGlContext>();
 
 
         builder.Services
@@ -55,8 +58,9 @@ class Program
 
         Log.Logger.Information("Astralis Game Client starting up...");
 
-        var app = builder.Build();
 
+        var app = builder.Build();
+        _openGlContext = new OpenGlContext(new AstralisGameConfig(), app.Services.GetService<IEventBusService>());
         app.RunAsync();
     }
 }
