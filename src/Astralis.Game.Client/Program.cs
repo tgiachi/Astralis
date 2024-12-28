@@ -25,6 +25,7 @@ namespace Astralis.Game.Client;
 class Program
 {
     private static IOpenGlContext _openGlContext = null!;
+    private static IEventBusService _eventBusService = new EventBusService();
     public static async Task Main(string[] args)
     {
 
@@ -42,7 +43,7 @@ class Program
 
         builder.Services.AddContainerModule<EcsModule>();
         builder.Services
-            .AddSingleton<IEventBusService, EventBusService>()
+            .AddSingleton<IEventBusService>( provider => _eventBusService)
             .AddSingleton<INetworkClient, NetworkClient>()
             .AddSingleton<ITextureManagerService, TextureManagerService>()
             .AddSingleton(provider => _openGlContext)
@@ -58,9 +59,10 @@ class Program
 
         Log.Logger.Information("Astralis Game Client starting up...");
 
+        _openGlContext = new OpenGlContext(new AstralisGameConfig(), _eventBusService);
 
         var app = builder.Build();
-        _openGlContext = new OpenGlContext(new AstralisGameConfig(), app.Services.GetService<IEventBusService>());
+
         app.RunAsync();
     }
 }

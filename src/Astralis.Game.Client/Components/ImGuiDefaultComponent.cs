@@ -10,10 +10,10 @@ public class ImGuiDefaultComponent : IImGuiComponent
         ImGui.Begin("Test");
 
         ImGui.Text("Hello, world!");
+        ImGui.ShowMetricsWindow();
+        ImGui.ShowDebugLogWindow( );
 
         ImGui.End();
-
-        ImGui.ShowDemoWindow();
     }
 
     public object[] GetComponents()
