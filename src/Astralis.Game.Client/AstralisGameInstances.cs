@@ -14,6 +14,8 @@ public static class AstralisGameInstances
     public static IEcsService EcsService() => ServiceProvider.GetService<IEcsService>();
     public static IFontManagerService FontManagerService() => ServiceProvider.GetService<IFontManagerService>();
     public static IEventBusService EventBusService() => ServiceProvider.GetService<IEventBusService>();
+
+    public static ITextureManagerService TextureManagerService() => ServiceProvider.GetService<ITextureManagerService>();
     public static IOpenGlContext OpenGlContext { get; set; }
 
     public static AssetDirectories AssetDirectories { get; set; }

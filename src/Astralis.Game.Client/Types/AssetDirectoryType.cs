@@ -4,5 +4,6 @@ public enum AssetDirectoryType
 {
     Root,
     Fonts,
-    Shaders
+    Shaders,
+    Textures,
 }

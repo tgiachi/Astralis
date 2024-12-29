@@ -49,7 +49,7 @@ public class PlayerGameObject : BaseGameObject, IDebuggableComponent
         _keyboard = openGlContext.PrimaryKeyboard;
         _mouse = openGlContext.PrimaryMouse;
         Position = position == default ? Vector3.Zero : position;
-        
+
         SetupVariables();
     }
 
