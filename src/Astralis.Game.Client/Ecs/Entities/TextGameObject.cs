@@ -31,6 +31,7 @@ public class TextGameObject : BaseGameObject
             Rotation = 0
         };
         _position2dComponent = new Position2dComponent(x, y);
+        
     }
 
     public void SetText(string text)

@@ -38,6 +38,9 @@ class Program
             var window = AstralisGameInstances.OpenGlContext.Window;
             window.Run();
 
+            AstralisGameInstances.OpenGlContext.Stop();
+
+
         }
         catch (Exception e)
         {

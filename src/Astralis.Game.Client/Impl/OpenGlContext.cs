@@ -103,6 +103,7 @@ public class OpenGlContext
     public void Stop()
     {
         running = false;
+
     }
 
     private unsafe void OnLoad()
@@ -258,6 +259,8 @@ public class OpenGlContext
     private void CloseWindow()
     {
         Window.Close();
+
+        Window.Dispose();
     }
 
     private void KeyDown(IKeyboard keyboard, Key key, int arg3)
