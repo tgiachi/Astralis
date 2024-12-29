@@ -1,6 +1,6 @@
 using Astralis.Game.Client.Interfaces.Entities;
 
-namespace Astralis.Game.Client.Components.Ecs;
+namespace Astralis.Game.Client.Components.Entities;
 
 public interface IImGuiComponent : IGameObject
 {

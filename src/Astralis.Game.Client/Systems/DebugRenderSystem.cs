@@ -1,6 +1,6 @@
 using Arch.Core;
 using Arch.System;
-using Astralis.Game.Client.Components.Ecs;
+using Astralis.Game.Client.Ecs.Components;
 using ImGuiNET;
 using Silk.NET.OpenGL;
 
@@ -8,7 +8,7 @@ namespace Astralis.Game.Client.Systems;
 
 public class DebugRenderSystem : BaseSystem<World, GL>
 {
-    private readonly QueryDescription _desc = new QueryDescription().WithAny<IDebuggableComponent>();
+    private readonly QueryDescription _desc = new QueryDescription().WithAny<DebuggableComponent>();
 
     public DebugRenderSystem(World world) : base(world)
     {
@@ -19,13 +19,13 @@ public class DebugRenderSystem : BaseSystem<World, GL>
         ImGui.Begin("Debugger");
         World.Query(
             in _desc,
-            (ref IDebuggableComponent debuggable) =>
+            (ref Entity entity, ref DebuggableComponent debuggable) =>
             {
                 ImGui.BeginGroup();
                 ImGui.Separator();
-                ImGui.Text(debuggable.Name + "_" + debuggable.Entity.Id);
+                ImGui.Text(debuggable.Obj.Name + "_" + entity.Id);
                 ImGui.Separator();
-                debuggable.DebugRender();
+                debuggable.Obj.DebugRender();
                 ImGui.EndGroup();
             }
         );

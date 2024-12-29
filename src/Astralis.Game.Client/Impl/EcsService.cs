@@ -5,8 +5,9 @@ using Astralis.Core.Attributes.Services;
 using Astralis.Core.Interfaces.Services;
 using Astralis.Core.Server.Events.Engine;
 using Astralis.Game.Client.Components;
-using Astralis.Game.Client.Components.Ecs;
 using Astralis.Game.Client.Data.Events.Ecs;
+using Astralis.Game.Client.Ecs.Entities;
+using Astralis.Game.Client.Ecs.Interfaces;
 using Astralis.Game.Client.Interfaces.Entities;
 using Astralis.Game.Client.Interfaces.Services;
 using Astralis.Game.Client.Systems;
@@ -88,25 +89,27 @@ public class EcsService : IEcsService
             "delta_time_group",
             new UpdateSystem(_world)
         );
-        var text = new TextComponent("Ciao, sono tommy la version e' {app_version}", 500, 100);
-        var entity = CreateEntity(text);
+        // var text = new TextEntity("Ciao, sono tommy la version e' {app_version}", 500, 100);
+        // var entity = CreateEntity(text);
+        //
+        // entity.Add((IDoUpdate)text, (IText)text, (IDebuggableComponent)text);
+        //
+        // IImGuiComponent imgui = new ImGuiComponent();
+        //
+        // var entity2 = _world.Create();
+        //
+        // entity2.Add(imgui);
+        //
+        // var isA = entity2.Has(typeof(IImGuiComponent));
+        //
+        // var text2 = new TextEntity("Ciao!!!!", 500, 200);
+        // AddEntity(text2);
+        //
+        // text2.Entity.Add((IDoUpdate)text2, (IText)text2, (IDebuggableComponent)text2);
+        //
+        // _logger.Information("ECS service started");
 
-        entity.Add((IUpdateComponent)text, (ITextComponent)text, (IDebuggableComponent)text);
-
-        IImGuiComponent imgui = new ImGuiComponent();
-
-        var entity2 = _world.Create();
-
-        entity2.Add(imgui);
-
-        var isA = entity2.Has(typeof(IImGuiComponent));
-
-        var text2 = new TextComponent("Ciao!!!!", 500, 200);
-        AddEntity(text2);
-
-        text2.Entity.Add((IUpdateComponent)text2, (ITextComponent)text2, (IDebuggableComponent)text2);
-
-        _logger.Information("ECS service started");
+        AddEntity(new TextGameObject("Ciao, sono tommy la version e' {app_version}", 500, 100));
     }
 
 
@@ -129,18 +132,13 @@ public class EcsService : IEcsService
         _world.Dispose();
     }
 
-    public void AddEntity<TEntity>(TEntity entity, params object[] components) where TEntity : IGameObject
+    public void AddEntity<TGameObject>(TGameObject gameObject) where TGameObject : IGameObject
     {
-        var newEntity = _world.Create();
+        var entity = _world.Create();
 
-        entity.Entity = newEntity;
+        gameObject.Initialize(entity);
 
-        foreach (var component in components)
-        {
-            newEntity.Add(component);
-        }
-
-        _logger.Debug("Created entity id: {EntityId}", newEntity.Id);
+        _logger.Debug("Created entity id: {EntityId}", entity.Id);
     }
 
     public Entity CreateEntity(params object[] components)

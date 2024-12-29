@@ -1,12 +1,12 @@
 using Arch.Core;
 using Arch.System;
-using Astralis.Game.Client.Components.Ecs;
+using Astralis.Game.Client.Ecs.Interfaces;
 
 namespace Astralis.Game.Client.Systems;
 
 public class UpdateSystem : BaseSystem<World, double>
 {
-    private readonly QueryDescription _desc = new QueryDescription().WithAny<IUpdateComponent>();
+    private readonly QueryDescription _desc = new QueryDescription().WithAny<IDoUpdate>();
 
     public UpdateSystem(World world) : base(world)
     {
@@ -17,7 +17,7 @@ public class UpdateSystem : BaseSystem<World, double>
         var d = t;
         World.Query(
             in _desc,
-            (ref IUpdateComponent updateComponent) =>
+            (ref IDoUpdate updateComponent) =>
             {
                 updateComponent.Update(d);
             }
