@@ -1,0 +1,10 @@
+{
+    "file_name": "_blockatlas.png",
+    "tile_width": 80,
+    "tile_height": 80,
+    "mapping": {
+        "grass_side": 3,
+        "grass_top": 145
+    }
+
+}

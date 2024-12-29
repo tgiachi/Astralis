@@ -46,10 +46,18 @@ public class AssetDirectories
         }
     }
 
-    public List<string> ScanDirectory(AssetDirectoryType directoryType, string filter = "*.*")
+    public List<string> ScanDirectory(AssetDirectoryType directoryType, string filter = "*.*", bool recursive = false)
+
     {
         var path = GetPath(directoryType);
 
-        return !Directory.Exists(path) ? new List<string>() : Directory.GetFiles(path, filter).ToList();
+        return !Directory.Exists(path)
+            ? new List<string>()
+            : Directory.GetFiles(
+                    path,
+                    filter,
+                    recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly
+                )
+                .ToList();
     }
 }

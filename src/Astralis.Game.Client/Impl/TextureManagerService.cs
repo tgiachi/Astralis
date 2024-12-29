@@ -7,6 +7,7 @@ using Astralis.Game.Client.Interfaces.Services;
 using Astralis.Game.Client.Types;
 using Serilog;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
@@ -34,7 +35,20 @@ public class TextureManagerService : ITextureManagerService
         foreach (var texture in textures)
         {
             var name = Path.GetFileNameWithoutExtension(texture).ToSnakeCase();
+            if (name.StartsWith("_"))
+            {
+                _logger.Information("Skipping texture {Name}", name);
+                continue;
+            }
+
             LoadTexture(name, texture);
+        }
+
+        var tileSets = AstralisGameInstances.AssetDirectories.ScanDirectory(AssetDirectoryType.Textures, "*.json", true);
+
+        foreach (var tileSet in tileSets)
+        {
+            LoadTileSet(tileSet);
         }
     }
 
@@ -59,7 +73,7 @@ public class TextureManagerService : ITextureManagerService
         _textures.Add(name, texture);
     }
 
-    public void LoadTexture(string name, byte[] data)
+    public void LoadTexture(string name, byte[] data,int width, int height)
     {
         _logger.Information("Loading texture {Name} from data", name);
         if (_textures.TryGetValue(name, out Texture? value))
@@ -69,10 +83,9 @@ public class TextureManagerService : ITextureManagerService
         }
 
         // load image from data
-        using Image<Rgba32> image = Image.Load<Rgba32>(data);
 
 
-        var texture = new Texture(AstralisGameInstances.OpenGlContext.Gl, data, (uint)image.Width, (uint)image.Height);
+        var texture = new Texture(AstralisGameInstances.OpenGlContext.Gl, data, (uint)width, (uint)height);
         _textures.Add(name, texture);
     }
 
@@ -81,9 +94,11 @@ public class TextureManagerService : ITextureManagerService
         try
         {
             var tileSetData = File.ReadAllText(fileName).FromJson<TileSetData>();
+
+            var imageDirectory = Path.Combine(Path.GetDirectoryName(fileName), tileSetData.FileName);
             var tileDictionary = new Dictionary<string, byte[]>();
 
-            using Image<Rgba32> image = Image.Load<Rgba32>(tileSetData.FileName);
+            using Image<Rgba32> image = Image.Load<Rgba32>(imageDirectory);
             int rows = (image.Height - tileSetData.Margin * 2 + tileSetData.Spacing) /
                        (tileSetData.TileHeight + tileSetData.Spacing);
             int cols = (image.Width - tileSetData.Margin * 2 + tileSetData.Spacing) /
@@ -112,7 +127,7 @@ public class TextureManagerService : ITextureManagerService
 
             foreach (var (name, img) in tileDictionary)
             {
-                LoadTexture(name, img);
+                LoadTexture(name, img, tileSetData.TileWidth, tileSetData.TileHeight);
             }
         }
         catch (Exception ex)
