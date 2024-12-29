@@ -14,6 +14,7 @@ public class DebugMemoryGameObject : TimedGameObject, IDebuggableComponent
     }
 
     public string Name => "Memory";
+    public string Category => "System";
 
     public void DebugRender()
     {
