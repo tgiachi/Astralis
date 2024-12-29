@@ -3,11 +3,14 @@
 // Uniforms
 uniform sampler2D TextureSampler;
 
-// Varyings
-varying vec4 v_color;
-varying vec2 v_texCoords;
+// Inputs
+in vec4 v_color;
+in vec2 v_texCoords;
+
+// Output
+out vec4 FragColor;
 
 void main()
 {
-    gl_FragColor = v_color * texture2D(TextureSampler, v_texCoords);
+    FragColor = v_color * texture(TextureSampler, v_texCoords);
 }
