@@ -25,5 +25,6 @@ public interface IOpenGlContext
     bool CursorIsNotAvailable();
     unsafe CursorModeValue GetCursorMode();
 
+    double Fps { get; }
     Vector2Int GetWindowSize();
 }

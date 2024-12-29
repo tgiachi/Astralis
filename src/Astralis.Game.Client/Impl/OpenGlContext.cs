@@ -21,7 +21,7 @@ public class OpenGlContext
     : IOpenGlContext
 {
     // instance fields
-
+    public double Fps => _fps;
     public AstralisGameConfig Config { get; }
     public event Action<double> OnUpdateEvent;
     public event Action<double, GL> OnRenderEvent;
@@ -35,6 +35,10 @@ public class OpenGlContext
     public GL Gl { get; private set; } = null!;
     public IKeyboard PrimaryKeyboard { get; private set; } = null!;
     public IMouse PrimaryMouse { get; private set; } = null!;
+
+    private double _elapsedTime = 0.0;
+    private int _frameCount = 0;
+    private double _fps = 0.0;
 
 
     private ImGuiController imGuiController = null!;
@@ -103,7 +107,6 @@ public class OpenGlContext
     public void Stop()
     {
         running = false;
-
     }
 
     private unsafe void OnLoad()
@@ -215,6 +218,17 @@ public class OpenGlContext
 
     private void OnRender(double delta)
     {
+
+        _elapsedTime += delta;
+
+
+        if (_elapsedTime >= 1.0)
+        {
+            _fps = _frameCount / _elapsedTime;
+            _frameCount = 0;
+            _elapsedTime = 0;
+        }
+        _frameCount++;
         Gl.Enable(EnableCap.DepthTest);
         Gl.ClearColor(ClearColor);
         Gl.Clear((uint)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
@@ -250,6 +264,7 @@ public class OpenGlContext
         return (CursorModeValue)glfw
             .GetInputMode((WindowHandle*)Window.Handle, CursorStateAttribute.Cursor);
     }
+
 
     public Vector2Int GetWindowSize()
     {

@@ -19,6 +19,7 @@ public class DebugMemoryGameObject : TimedGameObject, IDebuggableComponent
     public void DebugRender()
     {
         ImGui.Text($"Total Memory: {_totalMemory.Bytes()}");
+        ImGui.Text("FPS: " + (AstralisGameInstances.OpenGlContext.Fps).ToString("0.00"));
     }
 
     public override void Trigger()
