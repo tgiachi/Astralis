@@ -11,6 +11,7 @@ using Astralis.Game.Client.Ecs.Interfaces;
 using Astralis.Game.Client.Interfaces.Entities;
 using Astralis.Game.Client.Interfaces.Services;
 using Astralis.Game.Client.Systems;
+using ImGuiNET;
 using Schedulers;
 using Serilog;
 using Silk.NET.OpenGL;
@@ -53,7 +54,7 @@ public class EcsService : IEcsService
 
     private void OnAddEcsEntity(AddEcsEntityEvent obj)
     {
-        CreateEntity(obj.Components);
+        AddEntity(obj.GameObject);
     }
 
     private void OnRender(double deltaTime, GL gl)
@@ -110,6 +111,12 @@ public class EcsService : IEcsService
         // _logger.Information("ECS service started");
 
         AddEntity(new TextGameObject("Ciao, sono tommy la version e' {app_version}", 500, 100));
+        AddEntity(new ImGuiGameObject(() =>
+        {
+            ImGui.Begin("Test 123");
+            ImGui.Text("Hello, world!");
+            ImGui.End();
+        }));
     }
 
 
@@ -141,16 +148,5 @@ public class EcsService : IEcsService
         _logger.Debug("Created entity id: {EntityId}", entity.Id);
     }
 
-    public Entity CreateEntity(params object[] components)
-    {
-        var entity = _world.Create();
 
-        foreach (var component in components)
-        {
-            entity.Add(component);
-        }
-
-        _logger.Debug("Created entity id: {EntityId}", entity.Id);
-        return entity;
-    }
 }

@@ -6,7 +6,5 @@ namespace Astralis.Game.Client.Interfaces.Services;
 
 public interface IEcsService : IAstralisSystemService, IDisposable
 {
-    Entity CreateEntity(params object[] components);
-
     void AddEntity<TGameObject>(TGameObject gameObject) where TGameObject : IGameObject;
 }
