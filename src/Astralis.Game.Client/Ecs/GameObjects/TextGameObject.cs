@@ -1,12 +1,10 @@
 using System.Numerics;
 using Arch.Core.Extensions;
 using Astralis.Core.Server.Interfaces.Services.System;
-
 using Astralis.Game.Client.Ecs.Components;
-using Astralis.Game.Client.Ecs.Entities.Base;
+using Astralis.Game.Client.Ecs.GameObjects.Base;
 
-
-namespace Astralis.Game.Client.Ecs.Entities;
+namespace Astralis.Game.Client.Ecs.GameObjects;
 
 public class TextGameObject : BaseGameObject
 {
@@ -31,7 +29,7 @@ public class TextGameObject : BaseGameObject
             Rotation = 0
         };
         _position2dComponent = new Position2dComponent(x, y);
-        
+
     }
 
     public void SetText(string text)

@@ -10,6 +10,7 @@ namespace Astralis.Game.Client.Core.Visuals;
 public class Camera
 {
     public Vector3 Position { get; set; }
+
     public Vector3 UiPosition = new Vector3(0, 0, 3);
     public Vector3 Front { get; set; }
     public Vector3 Up { get; private set; }

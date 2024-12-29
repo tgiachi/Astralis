@@ -5,7 +5,7 @@ using Astralis.Game.Client.Ecs.Components;
 using Astralis.Game.Client.Ecs.Interfaces;
 using Astralis.Game.Client.Interfaces.Entities;
 
-namespace Astralis.Game.Client.Ecs.Entities.Base;
+namespace Astralis.Game.Client.Ecs.GameObjects.Base;
 
 public abstract class BaseGameObject : IGameObject, IDoUpdate
 {

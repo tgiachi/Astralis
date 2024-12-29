@@ -1,6 +1,4 @@
-using Serilog;
-
-namespace Astralis.Game.Client.Ecs.Entities.Base;
+namespace Astralis.Game.Client.Ecs.GameObjects.Base;
 
 public class TimedGameObject : BaseGameObject
 {

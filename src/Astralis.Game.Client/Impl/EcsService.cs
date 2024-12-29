@@ -6,8 +6,8 @@ using Astralis.Core.Interfaces.Services;
 using Astralis.Core.Server.Events.Engine;
 using Astralis.Game.Client.Components;
 using Astralis.Game.Client.Data.Events.Ecs;
-using Astralis.Game.Client.Ecs.Entities;
-using Astralis.Game.Client.Ecs.Entities.Debugger;
+using Astralis.Game.Client.Ecs.GameObjects;
+using Astralis.Game.Client.Ecs.GameObjects.Debugger;
 using Astralis.Game.Client.Ecs.Interfaces;
 using Astralis.Game.Client.Interfaces.Entities;
 using Astralis.Game.Client.Interfaces.Services;
@@ -114,6 +114,8 @@ public class EcsService : IEcsService
         );
 
         AddEntity(new DebugMemoryGameObject());
+
+        AddEntity(new PlayerGameObject(AstralisGameInstances.OpenGlContext));
     }
 
 

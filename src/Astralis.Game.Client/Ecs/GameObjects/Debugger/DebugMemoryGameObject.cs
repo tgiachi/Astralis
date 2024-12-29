@@ -1,9 +1,9 @@
 using Astralis.Game.Client.Components.Entities;
-using Astralis.Game.Client.Ecs.Entities.Base;
+using Astralis.Game.Client.Ecs.GameObjects.Base;
 using Humanizer;
 using ImGuiNET;
 
-namespace Astralis.Game.Client.Ecs.Entities.Debugger;
+namespace Astralis.Game.Client.Ecs.GameObjects.Debugger;
 
 public class DebugMemoryGameObject : TimedGameObject, IDebuggableComponent
 {

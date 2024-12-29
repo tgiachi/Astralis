@@ -1,9 +1,9 @@
 using Arch.Core.Extensions;
 using Astralis.Game.Client.Components.Entities;
 using Astralis.Game.Client.Ecs.Components;
-using Astralis.Game.Client.Ecs.Entities.Base;
+using Astralis.Game.Client.Ecs.GameObjects.Base;
 
-namespace Astralis.Game.Client.Ecs.Entities;
+namespace Astralis.Game.Client.Ecs.GameObjects;
 
 public class ImGuiGameObject : BaseGameObject, IImGuiComponent
 {
