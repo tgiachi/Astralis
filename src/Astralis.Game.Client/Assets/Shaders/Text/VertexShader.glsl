@@ -1,3 +1,4 @@
+#version 330 core
 // Attributes
 attribute vec3 a_position;
 attribute vec4 a_color;

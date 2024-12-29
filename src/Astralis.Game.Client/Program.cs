@@ -2,6 +2,7 @@
 using Astralis.Game.Client.Data.Config;
 using Astralis.Game.Client.Impl;
 using Serilog;
+using Silk.NET.Windowing;
 
 
 namespace Astralis.Game.Client;
@@ -32,8 +33,21 @@ class Program
             AstralisGameInstances.EventBusService()
         );
 
-        await Task.Run(
-            () => { AstralisGameInstances.OpenGlContext.Run(); }
-        );
+        try
+        {
+            var window = AstralisGameInstances.OpenGlContext.Window;
+            window.Run();
+
+        }
+        catch (Exception e)
+        {
+            Log.Logger.Error(e, "An error occurred while running the game.");
+        }
+        finally
+        {
+            AstralisGameInstances.OpenGlContext.Stop();
+        }
+
+
     }
 }

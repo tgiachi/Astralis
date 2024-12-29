@@ -80,7 +80,7 @@ public class OpenGlContext
         options.Samples = 4; //Anti-aliasing
 
         options.VSync = config.EnableVSync;
-        options.API = new GraphicsAPI(ContextAPI.OpenGL, new APIVersion(4, 3));
+        options.API = new GraphicsAPI(ContextAPI.OpenGL, new APIVersion(4, 1));
         _logger.Information("View thread id: {ThreadId}", Environment.CurrentManagedThreadId);
         Window = Silk.NET.Windowing.Window.Create(options);
 

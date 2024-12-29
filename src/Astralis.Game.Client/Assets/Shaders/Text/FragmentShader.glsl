@@ -1,10 +1,4 @@
-#ifdef GL_ES
-#define LOWP lowp
-precision mediump float;
-#else
-#define LOWP
-#endif
-
+#version 330 core
 
 // Uniforms
 uniform sampler2D TextureSampler;
