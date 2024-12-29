@@ -1,6 +1,7 @@
 using Arch.Core;
 using Arch.System;
 using Astralis.Game.Client.Ecs.Components;
+using Astralis.Game.Client.Interfaces.Entities;
 using ImGuiNET;
 using Silk.NET.OpenGL;
 
@@ -21,9 +22,10 @@ public class DebugRenderSystem : BaseSystem<World, GL>
             in _desc,
             (ref Entity entity, ref DebuggableComponent debuggable) =>
             {
+                var gameObject = (IGameObject)debuggable.Obj;
                 ImGui.BeginGroup();
                 ImGui.Separator();
-                ImGui.Text(debuggable.Obj.Name + "_" + entity.Id);
+                ImGui.Text(debuggable.Obj.Name + "_" + gameObject.Id);
                 ImGui.Separator();
                 debuggable.Obj.DebugRender();
                 ImGui.EndGroup();

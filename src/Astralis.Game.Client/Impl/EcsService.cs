@@ -7,6 +7,7 @@ using Astralis.Core.Server.Events.Engine;
 using Astralis.Game.Client.Components;
 using Astralis.Game.Client.Data.Events.Ecs;
 using Astralis.Game.Client.Ecs.Entities;
+using Astralis.Game.Client.Ecs.Entities.Debugger;
 using Astralis.Game.Client.Ecs.Interfaces;
 using Astralis.Game.Client.Interfaces.Entities;
 using Astralis.Game.Client.Interfaces.Services;
@@ -71,15 +72,11 @@ public class EcsService : IEcsService
         _deltaTimeGroup?.AfterUpdate(in deltaTime);
     }
 
-    private void OnEngineStarted(EngineStartedEvent obj)
+    private void InitGroups()
     {
-        _logger.Information("Starting ECS service...");
-
-        AstralisGameInstances.OpenGlContext.OnUpdateEvent += OnUpdate;
-        AstralisGameInstances.OpenGlContext.OnRenderEvent += OnRender;
-
         _renderGroup = new Group<GL>(
             "render_group",
+            new RenderSystem(_world),
             new TextRenderSystem(_world, AstralisGameInstances.OpenGlContext),
             new ImguiRenderSystem(_world),
             new DebugRenderSystem(_world)
@@ -90,33 +87,33 @@ public class EcsService : IEcsService
             "delta_time_group",
             new UpdateSystem(_world)
         );
-        // var text = new TextEntity("Ciao, sono tommy la version e' {app_version}", 500, 100);
-        // var entity = CreateEntity(text);
-        //
-        // entity.Add((IDoUpdate)text, (IText)text, (IDebuggableComponent)text);
-        //
-        // IImGuiComponent imgui = new ImGuiComponent();
-        //
-        // var entity2 = _world.Create();
-        //
-        // entity2.Add(imgui);
-        //
-        // var isA = entity2.Has(typeof(IImGuiComponent));
-        //
-        // var text2 = new TextEntity("Ciao!!!!", 500, 200);
-        // AddEntity(text2);
-        //
-        // text2.Entity.Add((IDoUpdate)text2, (IText)text2, (IDebuggableComponent)text2);
-        //
-        // _logger.Information("ECS service started");
+
+        _deltaTimeGroup.Initialize();
+    }
+
+    private void OnEngineStarted(EngineStartedEvent obj)
+    {
+        _logger.Information("Starting ECS service...");
+
+        AstralisGameInstances.OpenGlContext.OnUpdateEvent += OnUpdate;
+        AstralisGameInstances.OpenGlContext.OnRenderEvent += OnRender;
+
+        InitGroups();
+
 
         AddEntity(new TextGameObject("Ciao, sono tommy la version e' {app_version}", 500, 100));
-        AddEntity(new ImGuiGameObject(() =>
-        {
-            ImGui.Begin("Test 123");
-            ImGui.Text("Hello, world!");
-            ImGui.End();
-        }));
+        AddEntity(
+            new ImGuiGameObject(
+                () =>
+                {
+                    ImGui.Begin("Test 123");
+                    ImGui.Text("Hello, world!");
+                    ImGui.End();
+                }
+            )
+        );
+
+        AddEntity(new DebugMemoryGameObject());
     }
 
 
@@ -147,6 +144,4 @@ public class EcsService : IEcsService
 
         _logger.Debug("Created entity id: {EntityId}", entity.Id);
     }
-
-
 }

@@ -18,7 +18,7 @@ public class TextGameObject : BaseGameObject
 
     private readonly Position2dComponent _position2dComponent;
 
-    public TextGameObject(string text, float x, float y, float fontSize = 8, string fontName = "Default")
+    public TextGameObject(string text, float x, float y, float fontSize = 16, string fontName = "Default")
     {
         _variablesService = AstralisGameInstances.VariablesService();
         _text = text;
