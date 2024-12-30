@@ -73,7 +73,7 @@ public class TextureManagerService : ITextureManagerService
         _textures.Add(name, texture);
     }
 
-    public void LoadTexture(string name, byte[] data,int width, int height)
+    public void LoadTexture(string name, byte[] data, int width, int height)
     {
         _logger.Information("Loading texture {Name} from data", name);
         if (_textures.TryGetValue(name, out Texture? value))
@@ -134,5 +134,16 @@ public class TextureManagerService : ITextureManagerService
         {
             _logger.Error(ex, "Failed to load tileset {FileName}", fileName);
         }
+    }
+
+    public Texture GetTexture(string name)
+    {
+        if (_textures.TryGetValue(name, out Texture? texture))
+        {
+            return texture;
+        }
+
+        _logger.Error("Texture {Name} not found", name);
+        throw new Exception($"Texture {name} not found");
     }
 }
