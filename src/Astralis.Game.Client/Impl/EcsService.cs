@@ -1,3 +1,4 @@
+using System.Numerics;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
@@ -5,6 +6,7 @@ using Astralis.Core.Attributes.Services;
 using Astralis.Core.Interfaces.Services;
 using Astralis.Core.Server.Events.Engine;
 using Astralis.Game.Client.Components;
+using Astralis.Game.Client.Core.Buffer;
 using Astralis.Game.Client.Data.Events.Ecs;
 using Astralis.Game.Client.Ecs.GameObjects;
 using Astralis.Game.Client.Ecs.GameObjects.Debugger;
@@ -78,6 +80,7 @@ public class EcsService : IEcsService
             "render_group",
             new RenderSystem(_world),
             new TextRenderSystem(_world, AstralisGameInstances.OpenGlContext),
+            new Texture2dRenderSystem(_world),
             new ImguiRenderSystem(_world),
             new DebugRenderSystem(_world)
         );
@@ -116,6 +119,15 @@ public class EcsService : IEcsService
         AddEntity(new DebugMemoryGameObject());
 
         AddEntity(new PlayerGameObject(AstralisGameInstances.OpenGlContext));
+
+        // try
+        // {
+        //     AddEntity(new Texture2dGameObject("grass_side", new Transform(Vector3.Zero, new Vector3(0.1f))));
+        // }
+        // catch (Exception e)
+        // {
+        //     _logger.Error(e, "Failed to create texture2d game object");
+        // }
     }
 
 
@@ -144,6 +156,6 @@ public class EcsService : IEcsService
 
         gameObject.Initialize(entity);
 
-        _logger.Debug("Created entity id: {EntityId}", entity.Id);
+        _logger.Debug("Created entity id: {EntityId} of type: {Type}", entity.Id, gameObject.GetType().Name);
     }
 }

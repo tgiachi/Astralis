@@ -1,16 +1,13 @@
-#version 410 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoord;
+#version 330 core
 
-out vec2 TexCoord;
+layout (location = 0) in vec3 aPosition;
+layout (location = 1) in vec2 aTextureCoord;
 
-layout (std140) uniform Matrices {
-    mat4 projection;
-    mat4 view;
-};
+out vec2 frag_texCoords;
+
 
 void main()
 {
-    gl_Position = projection * view * vec4(aPos, 1.0);
-    TexCoord = aTexCoord;
+    gl_Position = vec4(aPosition, 1.0);
+    frag_texCoords = aTextureCoord;
 }

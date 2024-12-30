@@ -24,11 +24,13 @@ public class Texture2dRenderSystem : BaseSystem<World, GL>
                 ref VertexComponent vertexComponent
             ) =>
             {
-                vertexComponent.Vbo.Bind();
-                shader.Shader.Use();
-                texture.Texture.Bind();
-                shader.Shader.SetUniform("ourTexture", 0);
-                gl.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, null);
+                gl.BindVertexArray(vertexComponent.Vao);
+                gl.UseProgram(shader.Shader.Handle);
+
+                gl.ActiveTexture(TextureUnit.Texture0);
+                gl.BindTexture(TextureTarget.Texture2D, texture.Texture.Handle);
+
+                gl.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, (void*)0);
             }
         );
         base.Update(in t);

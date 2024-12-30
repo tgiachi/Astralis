@@ -6,6 +6,7 @@ namespace Astralis.Game.Client.Core.Shaders;
 
 public class Shader : IDisposable
 {
+    public uint Handle => handle;
     private readonly uint handle;
     private readonly GL _gl;
     private bool disposed = false;

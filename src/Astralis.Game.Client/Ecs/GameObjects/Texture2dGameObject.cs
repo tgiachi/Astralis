@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Numerics;
 using Arch.Core.Extensions;
 using Astralis.Game.Client.Core.Buffer;
+using Astralis.Game.Client.Core.Utils;
 using Astralis.Game.Client.Ecs.Components;
 using Astralis.Game.Client.Ecs.GameObjects.Base;
 using Astralis.Game.Client.Types;
@@ -17,7 +18,9 @@ public class Texture2dGameObject : BaseGameObject
     private readonly TextureComponent _textureComponent;
     private readonly VertexComponent _vertexComponent;
 
-    private readonly Transform _transform = new();
+
+
+    private readonly Transform _transform;
 
 
     private static readonly uint[] _indices =
@@ -26,52 +29,106 @@ public class Texture2dGameObject : BaseGameObject
         3, 2, 1
     ];
 
-    private TextureVertex[] vertices = new TextureVertex[4];
-
-    private static readonly ImmutableArray<TextureVertex> VERTICES_BASE = ImmutableArray.Create<TextureVertex>(
-        new(new Vector3(1f, 1f, 0.0f), new Vector2(1.0f, 1.0f)),   // top right
-        new(new Vector3(1f, -1f, 0.0f), new Vector2(1.0f, 0.0f)),  // bottom right
-        new(new Vector3(-1f, -1f, 0.0f), new Vector2(0.0f, 0.0f)), // bottom left
-        new(new Vector3(-1f, 1f, 0.0f), new Vector2(0.0f, 1.0f))   // top left
-    );
+    private static uint[] indices =
+    {
+        0u, 1u, 3u,
+        1u, 2u, 3u
+    };
 
 
-    public Texture2dGameObject(string textureName, Vector2 position)
+    private static float[] vertices =
+    {
+        //     aPosition---- aTexCoords
+        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f
+    };
+
+    public unsafe Texture2dGameObject(string textureName, Transform transform)
     {
         var gl = AstralisGameInstances.OpenGlContext.Gl;
-        _position2dComponent = new Position2dComponent(position.X, position.Y);
+        _transform = transform;
+
+        _position2dComponent = new Position2dComponent(0, 0);
         _shaderComponent.Shader = new Shader(
             gl,
             Path.Combine(AstralisGameInstances.AssetDirectories[AssetDirectoryType.Shaders], "2dTexture")
         );
         _textureComponent.Texture = AstralisGameInstances.TextureManagerService().GetTexture(textureName);
 
-        _vertexComponent.Ebo = new BufferObject<uint>(gl, _indices, BufferTargetARB.ElementArrayBuffer);
-        _vertexComponent.Vbo = new BufferObject<TextureVertex>(
-            gl,
-            4,
-            BufferTargetARB.ArrayBuffer,
-            BufferUsageARB.StaticDraw
+        _vertexComponent.Vao = gl.GenVertexArray();
+        gl.BindVertexArray(_vertexComponent.Vao);
+
+        _vertexComponent.Vbo = gl.GenBuffer();
+        gl.BindBuffer(BufferTargetARB.ArrayBuffer, _vertexComponent.Vbo);
+
+        fixed (float* buf = vertices)
+            gl.BufferData(
+                BufferTargetARB.ArrayBuffer,
+                (nuint)(vertices.Length * sizeof(float)),
+                buf,
+                BufferUsageARB.StaticDraw
+            );
+
+
+        // Create the EBO.
+        _vertexComponent.Ebo = gl.GenBuffer();
+        gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, _vertexComponent.Ebo);
+
+        // Upload the indices data to the EBO.
+        fixed (uint* buf = indices)
+            gl.BufferData(
+                BufferTargetARB.ElementArrayBuffer,
+                (nuint)(indices.Length * sizeof(uint)),
+                buf,
+                BufferUsageARB.StaticDraw
+            );
+
+
+        const uint positionLoc = 0;
+        gl.EnableVertexAttribArray(positionLoc);
+        gl.VertexAttribPointer(positionLoc, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), (void*)0);
+
+        const uint texCoordLoc = 1;
+        gl.EnableVertexAttribArray(texCoordLoc);
+        gl.VertexAttribPointer(
+            texCoordLoc,
+            2,
+            VertexAttribPointerType.Float,
+            false,
+            5 * sizeof(float),
+            (void*)(3 * sizeof(float))
         );
-        _vertexComponent.Vao = new AVertexArrayObject<TextureVertex, uint>(gl, _vertexComponent.Vbo, _vertexComponent.Ebo);
 
-        _vertexComponent.Vao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float, 0);
-        _vertexComponent.Vao.VertexAttributePointer(1, 2, VertexAttribPointerType.Float, "texCoord");
+        gl.BindVertexArray(0);
+        gl.BindBuffer(BufferTargetARB.ArrayBuffer, 0);
+        gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, 0);
+
+        gl.ActiveTexture(TextureUnit.Texture0);
+        gl.BindTexture(TextureTarget.Texture2D, _textureComponent.Texture.Handle);
 
 
-        UpdateData();
-    }
+        // gl.TexParameterI(GLEnum.Texture2D, GLEnum.TextureWrapS, (int)TextureWrapMode.Repeat);
+        // gl.TexParameterI(GLEnum.Texture2D, GLEnum.TextureWrapT, (int)TextureWrapMode.Repeat);
+        // gl.TexParameterI(GLEnum.Texture2D, GLEnum.TextureMinFilter, (int)TextureMinFilter.Nearest);
+        // gl.TexParameterI(GLEnum.Texture2D, GLEnum.TextureMagFilter, (int)TextureMagFilter.Nearest);
 
+        gl.BindTexture(TextureTarget.Texture2D, 0);
 
-    private void UpdateData()
-    {
-        VERTICES_BASE.CopyTo(vertices);
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            vertices[i].Position = Vector3.Transform(vertices[i].Position, _transform.TransformMatrix);
-        }
+        int location = gl.GetUniformLocation(_shaderComponent.Shader.Handle, "uTexture");
+        gl.Uniform1(location, 0);
 
-        _vertexComponent.Vbo.SendData(vertices, 0);
+        gl.Enable(EnableCap.Blend);
+        gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+
+        gl.Uniform1(location, 0);
+
+        gl.Enable(EnableCap.Blend);
+        gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+
+        GLUtility.CheckError(gl);
+
     }
 
 

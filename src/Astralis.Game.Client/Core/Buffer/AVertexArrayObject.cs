@@ -13,7 +13,7 @@ public class AVertexArrayObject<TVertexType, TIndexType> : IDisposable
     private readonly GL _gl;
     private bool disposed = false;
 
-    public AVertexArrayObject(GL gl, BufferObject<TVertexType> vbo, BufferObject<TIndexType>? ebo = null)
+    public AVertexArrayObject(GL gl, ABufferObject<TVertexType> vbo, ABufferObject<TIndexType>? ebo = null)
     {
         _gl = gl;
 
@@ -33,7 +33,9 @@ public class AVertexArrayObject<TVertexType, TIndexType> : IDisposable
      * <param name="fieldName">The name of the field of the vertex type</param>
      */
     public unsafe void VertexAttributePointer(uint index, int count, VertexAttribPointerType type, string fieldName)
-        => VertexAttributePointer(index, count, type, (int)Marshal.OffsetOf(typeof(TVertexType), fieldName));
+    {
+        VertexAttributePointer(index, count, type, (int)Marshal.OffsetOf<TVertexType>(fieldName));
+    }
 
     public unsafe void VertexAttributePointer(uint index, int count, VertexAttribPointerType type, int offset)
     {

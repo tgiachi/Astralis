@@ -12,7 +12,7 @@ namespace Astralis.Game.Client.Systems;
 
 public class TextRenderSystem : BaseSystem<World, GL>
 {
-    private readonly QueryDescription _desc = new QueryDescription().WithAny<Position2dComponent, TextComponent>();
+    private readonly QueryDescription _desc = new QueryDescription().WithAll<Position2dComponent, TextComponent>();
 
     private readonly TextRenderer _renderer;
 
