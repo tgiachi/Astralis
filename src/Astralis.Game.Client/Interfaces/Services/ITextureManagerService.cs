@@ -10,5 +10,6 @@ public interface ITextureManagerService : IDisposable
 
     void LoadTileSet(string fileName);
 
-    Texture GetTexture(string name);
+    Texture2d GetTexture(string name);
+
 }

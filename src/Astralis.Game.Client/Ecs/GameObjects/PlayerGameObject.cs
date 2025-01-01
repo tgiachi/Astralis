@@ -46,6 +46,7 @@ public class PlayerGameObject : BaseGameObject, IDebuggableComponent
     {
         _openGlContext = openGlContext;
         _camera = new Camera(openGlContext.Window, openGlContext.PrimaryMouse);
+        AstralisGameInstances.Camera = _camera;
         _keyboard = openGlContext.PrimaryKeyboard;
         _mouse = openGlContext.PrimaryMouse;
         Position = position == default ? Vector3.Zero : position;

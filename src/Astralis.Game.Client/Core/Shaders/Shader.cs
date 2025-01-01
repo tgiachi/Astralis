@@ -6,8 +6,7 @@ namespace Astralis.Game.Client.Core.Shaders;
 
 public class Shader : IDisposable
 {
-    public uint Handle => handle;
-    private readonly uint handle;
+    public uint Handle { get; }
     private readonly GL _gl;
     private bool disposed = false;
     private readonly Dictionary<string, int> _uniformLocations = new();
@@ -21,35 +20,37 @@ public class Shader : IDisposable
 
         uint vertex = LoadShader(ShaderType.VertexShader, vertexPath);
         uint fragment = LoadShader(ShaderType.FragmentShader, fragmentPath);
-        handle = _gl.CreateProgram();
-        _gl.AttachShader(handle, vertex);
-        _gl.AttachShader(handle, fragment);
-        _gl.LinkProgram(handle);
-        _gl.GetProgram(handle, GLEnum.LinkStatus, out var status);
+        Handle = _gl.CreateProgram();
+        _gl.AttachShader(Handle, vertex);
+        _gl.AttachShader(Handle, fragment);
+        _gl.LinkProgram(Handle);
+        _gl.GetProgram(Handle, GLEnum.LinkStatus, out var status);
         if (status == 0)
         {
-            throw new Exception($"Program failed to link with error: {this._gl.GetProgramInfoLog(handle)}");
+            throw new Exception($"Program failed to link with error: {this._gl.GetProgramInfoLog(Handle)}");
         }
 
-        _gl.DetachShader(handle, vertex);
-        _gl.DetachShader(handle, fragment);
+        _gl.DetachShader(Handle, vertex);
+        _gl.DetachShader(Handle, fragment);
         _gl.DeleteShader(vertex);
         _gl.DeleteShader(fragment);
+
+        GLUtility.CheckError(_gl);
     }
 
     public void Use()
     {
-        _gl.UseProgram(handle);
+        _gl.UseProgram(Handle);
     }
 
     public uint GetUniformBlockIndex(string name)
     {
-        return _gl.GetUniformBlockIndex(handle, name);
+        return _gl.GetUniformBlockIndex(Handle, name);
     }
 
     public void SetUniform(string name, int value)
     {
-        int location = _gl.GetUniformLocation(handle, name);
+        int location = _gl.GetUniformLocation(Handle, name);
         if (location == -1)
         {
             throw new Exception($"{name} uniform not found on shader.");
@@ -60,7 +61,7 @@ public class Shader : IDisposable
 
     public void SetUniform(string name, float value)
     {
-        int location = _gl.GetUniformLocation(handle, name);
+        int location = _gl.GetUniformLocation(Handle, name);
         if (location == -1)
         {
             throw new Exception($"{name} uniform not found on shader.");
@@ -71,7 +72,7 @@ public class Shader : IDisposable
 
     public unsafe void SetUniform(string name, Matrix4x4 value)
     {
-        int location = _gl.GetUniformLocation(handle, name);
+        int location = _gl.GetUniformLocation(Handle, name);
         if (location == -1)
         {
             throw new Exception($"{name} uniform not found on shader.");
@@ -85,13 +86,13 @@ public class Shader : IDisposable
     {
         if (!_uniformLocations.ContainsKey(name))
         {
-            int location = _gl.GetUniformLocation(handle, name);
+            int location = _gl.GetUniformLocation(Handle, name);
             if (location == -1)
             {
                 throw new Exception($"{name} uniform not found on shader.");
             }
 
-            _uniformLocations.Add(name, _gl.GetUniformLocation(handle, name));
+            _uniformLocations.Add(name, _gl.GetUniformLocation(Handle, name));
         }
 
         return _uniformLocations[name];
@@ -99,7 +100,7 @@ public class Shader : IDisposable
 
     public int GetAttribLocation(string attribName)
     {
-        var result = _gl.GetAttribLocation(handle, attribName);
+        var result = _gl.GetAttribLocation(Handle, attribName);
 
         GLUtility.CheckError(_gl);
         return result;
@@ -126,7 +127,7 @@ public class Shader : IDisposable
         {
             if (disposing)
             {
-                _gl.DeleteProgram(handle);
+                _gl.DeleteProgram(Handle);
             }
 
             disposed = true;

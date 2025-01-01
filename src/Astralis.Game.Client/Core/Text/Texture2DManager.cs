@@ -15,17 +15,17 @@ public class Texture2DManager : ITexture2DManager
         _gl = gl;
     }
 
-    public object CreateTexture(int width, int height) => new FontTexture(_gl, width, height);
+    public object CreateTexture(int width, int height) => new Texture2d(_gl, width, height);
 
     public Point GetTextureSize(object texture)
     {
-        var t = (FontTexture)texture;
+        var t = (Texture2d)texture;
         return new Point(t.Width, t.Height);
     }
 
     public void SetTextureData(object texture, Rectangle bounds, byte[] data)
     {
-        var t = (FontTexture)texture;
+        var t = (Texture2d)texture;
         t.SetData(bounds, data);
     }
 }

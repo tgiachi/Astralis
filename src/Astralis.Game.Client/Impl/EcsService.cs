@@ -122,7 +122,7 @@ public class EcsService : IEcsService
 
         // try
         // {
-        //     AddEntity(new Texture2dGameObject("grass_side", new Transform(Vector3.Zero, new Vector3(0.1f))));
+        AddEntity(new Texture2dGameObject("grass_side", new Vector2(100, 100)));
         // }
         // catch (Exception e)
         // {

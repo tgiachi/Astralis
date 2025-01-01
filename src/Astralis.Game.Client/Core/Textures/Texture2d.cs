@@ -1,10 +1,13 @@
-using System.Drawing;
 using Astralis.Game.Client.Core.Utils;
 using Silk.NET.OpenGL;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Astralis.Game.Client.Core.Textures;
 
-public unsafe class FontTexture : IDisposable
+public unsafe class Texture2d : IDisposable
 {
     private readonly GL _gl;
     private readonly uint _handle;
@@ -12,7 +15,7 @@ public unsafe class FontTexture : IDisposable
     public readonly int Height;
 
 
-    public FontTexture(GL gl, int width, int height)
+    public Texture2d(GL gl, int width, int height)
     {
         _gl = gl;
         Width = width;
@@ -34,6 +37,89 @@ public unsafe class FontTexture : IDisposable
             PixelType.UnsignedByte,
             null
         );
+        GLUtility.CheckError(gl);
+
+        SetParameters();
+    }
+
+    public Texture2d(GL gl, Span<byte> data, uint width, uint height)
+    {
+        //Saving the gl instance.
+        _gl = gl;
+
+        //Setting the width and height of the texture.
+        Width = (int)width;
+        Height = (int)height;
+
+        //Generating the opengl handle;
+        _handle = this._gl.GenTexture();
+        Bind();
+
+        //We want the ability to create a texture using data generated from code aswell.
+        fixed (void* d = &data[0])
+        {
+            //Setting the data of a texture.
+            _gl.TexImage2D(
+                TextureTarget.Texture2D,
+                0,
+                (int)InternalFormat.Rgba,
+                width,
+                height,
+                0,
+                PixelFormat.Rgba,
+                PixelType.UnsignedByte,
+                d
+            );
+            SetParameters();
+        }
+    }
+
+    public Texture2d(GL gl, string path)
+    {
+        _gl = gl;
+        _handle = gl.GenTexture();
+
+        Bind();
+
+        using var img = Image.Load<Rgba32>(path);
+        img.Mutate(x => x.Flip(FlipMode.Vertical));
+
+        gl.TexImage2D(
+            TextureTarget.Texture2D,
+            0,
+            InternalFormat.Rgba8,
+            (uint)img.Width,
+            (uint)img.Height,
+            0,
+            PixelFormat.Rgba,
+            PixelType.UnsignedByte,
+            null
+        );
+
+        img.ProcessPixelRows(
+            accessor =>
+            {
+                for (int y = 0; y < accessor.Height; y++)
+                {
+                    fixed (void* data = accessor.GetRowSpan(y))
+                    {
+                        //Loading the actual image.
+                        gl.TexSubImage2D(
+                            TextureTarget.Texture2D,
+                            0,
+                            0,
+                            y,
+                            (uint)accessor.Width,
+                            1,
+                            PixelFormat.Rgba,
+                            PixelType.UnsignedByte,
+                            data
+                        );
+                    }
+                }
+            }
+        );
+
         GLUtility.CheckError(gl);
 
         SetParameters();

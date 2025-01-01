@@ -18,7 +18,7 @@ public class TextureManagerService : ITextureManagerService
     private readonly IEventBusService _eventBusService;
     private readonly ILogger _logger = Log.ForContext<TextureManagerService>();
 
-    private readonly Dictionary<string, Texture> _textures = new();
+    private readonly Dictionary<string, Texture2d> _textures = new();
 
     public TextureManagerService(IEventBusService eventBusService)
     {
@@ -63,20 +63,20 @@ public class TextureManagerService : ITextureManagerService
     public void LoadTexture(string name, string path)
     {
         _logger.Information("Loading texture {Name} from {Path}", name, path);
-        if (_textures.TryGetValue(name, out Texture? value))
+        if (_textures.TryGetValue(name, out Texture2d? value))
         {
             value.Dispose();
             _textures.Remove(name);
         }
 
-        var texture = new Texture(AstralisGameInstances.OpenGlContext.Gl, path);
+        var texture = new Texture2d(AstralisGameInstances.OpenGlContext.Gl, path);
         _textures.Add(name, texture);
     }
 
     public void LoadTexture(string name, byte[] data, int width, int height)
     {
         _logger.Information("Loading texture {Name} from data", name);
-        if (_textures.TryGetValue(name, out Texture? value))
+        if (_textures.TryGetValue(name, out Texture2d? value))
         {
             value.Dispose();
             _textures.Remove(name);
@@ -85,7 +85,7 @@ public class TextureManagerService : ITextureManagerService
         // load image from data
 
 
-        var texture = new Texture(AstralisGameInstances.OpenGlContext.Gl, data, (uint)width, (uint)height);
+        var texture = new Texture2d(AstralisGameInstances.OpenGlContext.Gl, data, (uint)width, (uint)height);
         _textures.Add(name, texture);
     }
 
@@ -136,9 +136,9 @@ public class TextureManagerService : ITextureManagerService
         }
     }
 
-    public Texture GetTexture(string name)
+    public Texture2d GetTexture(string name)
     {
-        if (_textures.TryGetValue(name, out Texture? texture))
+        if (_textures.TryGetValue(name, out Texture2d? texture))
         {
             return texture;
         }
@@ -146,4 +146,6 @@ public class TextureManagerService : ITextureManagerService
         _logger.Error("Texture {Name} not found", name);
         throw new Exception($"Texture {name} not found");
     }
+
+
 }

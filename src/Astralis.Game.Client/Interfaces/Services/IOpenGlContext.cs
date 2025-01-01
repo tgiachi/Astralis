@@ -10,6 +10,8 @@ namespace Astralis.Game.Client.Interfaces.Services;
 
 public interface IOpenGlContext
 {
+    public uint UboWorldHandle { get; }
+    public uint UboUiHandle { get; }
     AstralisGameConfig Config { get; }
     event Action<double> OnUpdateEvent;
     event Action<double, GL> OnRenderEvent;

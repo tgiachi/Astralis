@@ -3,6 +3,7 @@ using Astralis.Game.Client.Core.Buffer;
 using Astralis.Game.Client.Core.Textures;
 using Astralis.Game.Client.Core.Utils;
 using Astralis.Game.Client.Interfaces.Services;
+using FontStashSharp;
 using FontStashSharp.Interfaces;
 using Silk.NET.OpenGL;
 using Shader = Astralis.Game.Client.Core.Shaders.Shader;
@@ -133,7 +134,7 @@ public class TextRenderer : IFontStashRenderer2, IDisposable
 
         _vertexBuffer.SetData(_vertexData, 0, _vertexIndex);
 
-        var texture = (FontTexture)_lastTexture;
+        var texture = (Texture2d)_lastTexture;
         texture.Bind();
 
         _gl.DrawElements(PrimitiveType.Triangles, (uint)(_vertexIndex * 6 / 4), DrawElementsType.UnsignedShort, null);
@@ -154,5 +155,39 @@ public class TextRenderer : IFontStashRenderer2, IDisposable
         }
 
         return result;
+    }
+
+    public void DrawTexture(
+        object texture,
+        Vector2 position,
+        Vector2 size,
+        FSColor color
+    )
+    {
+
+        var topLeft = new VertexPositionColorTexture();
+        topLeft.Position = new Vector3(position.X, position.Y, 0);
+        topLeft.Color = color;
+        topLeft.TextureCoordinate = new Vector2(0, 0);
+
+
+        var topRight = new VertexPositionColorTexture();
+
+        topRight.Position = new Vector3(position.X + size.X, position.Y, 0);
+        topRight.Color = color;
+        topRight.TextureCoordinate = new Vector2(1, 0);
+
+        var bottomLeft = new VertexPositionColorTexture();
+        bottomLeft.Position = new Vector3(position.X, position.Y + size.Y, 0);
+        bottomLeft.Color = color;
+        bottomLeft.TextureCoordinate = new Vector2(0, 1);
+
+
+        var bottomRight = new VertexPositionColorTexture();
+        bottomRight.Position = new Vector3(position.X + size.X, position.Y + size.Y, 0);
+        bottomRight.Color = color;
+        bottomRight.TextureCoordinate = new Vector2(1, 1);
+
+        DrawQuad(texture, ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
     }
 }

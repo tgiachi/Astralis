@@ -43,8 +43,8 @@ public class OpenGlContext
 
     private ImGuiController imGuiController = null!;
 
-    public uint uboWorld;
-    public uint uboUi;
+    public uint UboWorldHandle { get; private set; }
+    public uint UboUiHandle { get; private set; }
 
     public static readonly Color DEFAULT_CLEAR_COLOR = Color.Black;
     public Color ClearColor = DEFAULT_CLEAR_COLOR;
@@ -168,20 +168,20 @@ public class OpenGlContext
 
     private unsafe void InitUniformBuffers()
     {
-        uboWorld = Gl.GenBuffer();
-        Gl.BindBuffer(BufferTargetARB.UniformBuffer, uboWorld);
+        UboWorldHandle = Gl.GenBuffer();
+        Gl.BindBuffer(BufferTargetARB.UniformBuffer, UboWorldHandle);
         Gl.BufferData(BufferTargetARB.UniformBuffer, (nuint)(2 * sizeof(Matrix4X4<float>)), null, GLEnum.StaticDraw);
         Gl.BindBuffer(BufferTargetARB.UniformBuffer, 0);
 
-        Gl.BindBufferRange(BufferTargetARB.UniformBuffer, 0, uboWorld, 0, (nuint)(2 * sizeof(Matrix4X4<float>)));
+        Gl.BindBufferRange(BufferTargetARB.UniformBuffer, 0, UboWorldHandle, 0, (nuint)(2 * sizeof(Matrix4X4<float>)));
 
 
-        uboUi = Gl.GenBuffer();
-        Gl.BindBuffer(BufferTargetARB.UniformBuffer, uboUi);
+        UboUiHandle = Gl.GenBuffer();
+        Gl.BindBuffer(BufferTargetARB.UniformBuffer, UboUiHandle);
         Gl.BufferData(BufferTargetARB.UniformBuffer, (nuint)(2 * sizeof(Matrix4X4<float>)), null, GLEnum.StaticDraw);
         Gl.BindBuffer(BufferTargetARB.UniformBuffer, 0);
 
-        Gl.BindBufferRange(BufferTargetARB.UniformBuffer, 1, uboUi, 0, (nuint)(2 * sizeof(Matrix4X4<float>)));
+        Gl.BindBufferRange(BufferTargetARB.UniformBuffer, 1, UboUiHandle, 0, (nuint)(2 * sizeof(Matrix4X4<float>)));
     }
 
     private void EnableFaceCulling()
