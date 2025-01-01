@@ -161,33 +161,58 @@ public class TextRenderer : IFontStashRenderer2, IDisposable
         object texture,
         Vector2 position,
         Vector2 size,
-        FSColor color
+        FSColor color,
+        float rotation = 0
     )
     {
+        var center = position + size / 2;
 
-        var topLeft = new VertexPositionColorTexture();
-        topLeft.Position = new Vector3(position.X, position.Y, 0);
-        topLeft.Color = color;
-        topLeft.TextureCoordinate = new Vector2(0, 0);
-
-
-        var topRight = new VertexPositionColorTexture();
-
-        topRight.Position = new Vector3(position.X + size.X, position.Y, 0);
-        topRight.Color = color;
-        topRight.TextureCoordinate = new Vector2(1, 0);
-
-        var bottomLeft = new VertexPositionColorTexture();
-        bottomLeft.Position = new Vector3(position.X, position.Y + size.Y, 0);
-        bottomLeft.Color = color;
-        bottomLeft.TextureCoordinate = new Vector2(0, 1);
+        var topLeftPosition = RotatePoint(new Vector2(position.X, position.Y), center, rotation);
+        var topRightPosition = RotatePoint(new Vector2(position.X + size.X, position.Y), center, rotation);
+        var bottomLeftPosition = RotatePoint(new Vector2(position.X, position.Y + size.Y), center, rotation);
+        var bottomRightPosition = RotatePoint(new Vector2(position.X + size.X, position.Y + size.Y), center, rotation);
 
 
-        var bottomRight = new VertexPositionColorTexture();
-        bottomRight.Position = new Vector3(position.X + size.X, position.Y + size.Y, 0);
-        bottomRight.Color = color;
-        bottomRight.TextureCoordinate = new Vector2(1, 1);
+        var topLeft = new VertexPositionColorTexture
+        {
+            Position = new Vector3(topLeftPosition, 0),
+            Color = color,
+            TextureCoordinate = new Vector2(0, 0)
+        };
+
+        var topRight = new VertexPositionColorTexture
+        {
+            Position = new Vector3(topRightPosition, 0),
+            Color = color,
+            TextureCoordinate = new Vector2(1, 0)
+        };
+
+        var bottomLeft = new VertexPositionColorTexture
+        {
+            Position = new Vector3(bottomLeftPosition, 0),
+            Color = color,
+            TextureCoordinate = new Vector2(0, 1)
+        };
+
+        var bottomRight = new VertexPositionColorTexture
+        {
+            Position = new Vector3(bottomRightPosition, 0),
+            Color = color,
+            TextureCoordinate = new Vector2(1, 1)
+        };
 
         DrawQuad(texture, ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
+    }
+
+
+    private static Vector2 RotatePoint(Vector2 point, Vector2 origin, float angle)
+    {
+        float cos = MathF.Cos(angle);
+        float sin = MathF.Sin(angle);
+        var translated = point - origin;
+        return new Vector2(
+            translated.X * cos - translated.Y * sin,
+            translated.X * sin + translated.Y * cos
+        ) + origin;
     }
 }

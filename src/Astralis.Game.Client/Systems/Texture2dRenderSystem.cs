@@ -11,7 +11,7 @@ namespace Astralis.Game.Client.Systems;
 public class Texture2dRenderSystem : BaseSystem<World, GL>
 {
     private readonly QueryDescription _desc = new QueryDescription()
-        .WithAll<TextureComponent, Position2dComponent, ScaleComponent>();
+        .WithAll<TextureComponent, Position2dComponent, ScaleComponent, RotationComponent>();
 
     private readonly TextRenderer _renderer;
 
@@ -30,14 +30,15 @@ public class Texture2dRenderSystem : BaseSystem<World, GL>
         World.Query(
             in _desc,
             (
-                ref TextureComponent texture, ref Position2dComponent position, ref ScaleComponent scale
+                ref TextureComponent texture, ref Position2dComponent position, ref ScaleComponent scale, ref RotationComponent rotation
             ) =>
             {
                 _renderer.DrawTexture(
                     texture.Texture,
                     position.Position,
                     new Vector2(texture.Texture.Width * scale.Size.X, texture.Texture.Height * scale.Size.Y),
-                    FSColor.White
+                    FSColor.White,
+                    rotation.Rotation
                 );
             }
         );
