@@ -120,6 +120,9 @@ public unsafe class Texture2d : IDisposable
             }
         );
 
+        Width = img.Width;
+        Height = img.Height;
+
         GLUtility.CheckError(gl);
 
         SetParameters();
