@@ -18,6 +18,8 @@ public class TextGameObject : BaseGameObject
 
     public TextGameObject(string text, float x, float y, float fontSize = 16, string fontName = "Default")
     {
+        Name = "TextGameObject";
+
         _variablesService = AstralisGameInstances.VariablesService();
         _text = text;
         _textComponent = new TextComponent()

@@ -18,6 +18,8 @@ public class Texture2dGameObject : BaseGameObject
     {
         var gl = AstralisGameInstances.OpenGlContext.Gl;
 
+        Name = textureName;
+
         if (scale == default)
         {
             scale = Vector2.One;

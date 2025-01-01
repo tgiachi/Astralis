@@ -10,6 +10,8 @@ namespace Astralis.Game.Client.Ecs.GameObjects.Base;
 public abstract class BaseGameObject : IGameObject, IDoUpdate
 {
     public int Id { get; set; }
+
+    public string Name { get; set; }
     public Entity Entity { get; set; }
 
     public void Initialize(Entity entity)

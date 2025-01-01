@@ -42,10 +42,11 @@ public class PlayerGameObject : BaseGameObject, IDebuggableComponent
     public Vector3Direction PlayerDirection { get; set; } = Vector3Direction.None;
 
 
-    public PlayerGameObject(IOpenGlContext openGlContext, Vector3 position = default)
+    public PlayerGameObject(IOpenGlContext openGlContext, Camera camera, Vector3 position = default)
     {
+
         _openGlContext = openGlContext;
-        _camera = new Camera(openGlContext.Window, openGlContext.PrimaryMouse);
+        _camera = camera;
         AstralisGameInstances.Camera = _camera;
         _keyboard = openGlContext.PrimaryKeyboard;
         _mouse = openGlContext.PrimaryMouse;

@@ -7,6 +7,7 @@ using Astralis.Core.Interfaces.Services;
 using Astralis.Core.Server.Events.Engine;
 using Astralis.Game.Client.Components;
 using Astralis.Game.Client.Core.Buffer;
+using Astralis.Game.Client.Core.Visuals;
 using Astralis.Game.Client.Data.Events.Ecs;
 using Astralis.Game.Client.Ecs.GameObjects;
 using Astralis.Game.Client.Ecs.GameObjects.Debugger;
@@ -118,7 +119,11 @@ public class EcsService : IEcsService
 
         AddEntity(new DebugMemoryGameObject());
 
-        AddEntity(new PlayerGameObject(AstralisGameInstances.OpenGlContext));
+        AstralisGameInstances.Camera = new Camera(
+            AstralisGameInstances.OpenGlContext.Window,
+            AstralisGameInstances.OpenGlContext.PrimaryMouse
+        );
+        AddEntity(new PlayerGameObject(AstralisGameInstances.OpenGlContext, AstralisGameInstances.Camera));
 
         // try
         // {
