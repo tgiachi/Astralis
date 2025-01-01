@@ -22,6 +22,8 @@ public class OpenGlContext
 {
     // instance fields
     public double Fps => _fps;
+
+    public double MsPerFrame => 1000.0 / _fps;
     public AstralisGameConfig Config { get; }
     public event Action<double> OnUpdateEvent;
     public event Action<double, GL> OnRenderEvent;
@@ -218,7 +220,6 @@ public class OpenGlContext
 
     private void OnRender(double delta)
     {
-
         _elapsedTime += delta;
 
 
@@ -228,6 +229,7 @@ public class OpenGlContext
             _frameCount = 0;
             _elapsedTime = 0;
         }
+
         _frameCount++;
         Gl.Enable(EnableCap.DepthTest);
         Gl.ClearColor(ClearColor);
