@@ -13,11 +13,10 @@ public class Texture2dGameObject : BaseGameObject
     private readonly Position2dComponent _position2dComponent;
     private readonly ScaleComponent _scaleComponent;
     private readonly TextureComponent _textureComponent;
+    private readonly RotationComponent _rotationComponent;
 
-    private RotationComponent _rotationComponent;
 
-
-    public  Texture2dGameObject(string textureName, Vector2 position, Vector2 scale = default, float rotation = 0)
+    public Texture2dGameObject(string textureName, Vector2 position, Vector2 scale = default, float rotation = 0)
     {
         var gl = AstralisGameInstances.OpenGlContext.Gl;
 
