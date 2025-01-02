@@ -27,6 +27,7 @@ class Program
         AstralisGameInstances.VersionService();
         AstralisGameInstances.FontManagerService();
         AstralisGameInstances.TextureManagerService();
+        AstralisGameInstances.BlockService();
         AstralisGameInstances.EcsService();
 
         AstralisGameInstances.OpenGlContext = new OpenGlContext(

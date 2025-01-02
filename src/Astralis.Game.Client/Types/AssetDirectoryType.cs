@@ -6,4 +6,5 @@ public enum AssetDirectoryType
     Fonts,
     Shaders,
     Textures,
+    Blocks
 }
