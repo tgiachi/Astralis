@@ -25,18 +25,23 @@ public class Camera
 
     public float Zoom { get; set; } = 60f;
     private Vector2 _lastMousePosition;
-    private bool _isZoomActive = false;
-    private IMouse? _mouse;
+    private readonly bool _isZoomActive = false;
+    private readonly IMouse? _mouse;
     public readonly bool frustrumUpdate = true;
 
-    private Frustum _frustum;
+    private readonly Frustum _frustum;
 
     public Camera(IWindow? window = null, IMouse? mouse = null)
     {
+        _mouse = mouse;
         Setup(Vector3.Zero, Vector3.UnitZ * 1, WorldUp, 800f / 600f);
-        this._frustum = new Frustum(this);
+        _frustum = new Frustum(this);
 
-        if (window is null) return;
+        if (window is null)
+        {
+            return;
+        }
+
         Vector2D<int> size = window.GetFullSize();
         AspectRatio = size.X / (float)size.Y;
         window.FramebufferResize += FrameBufferResize;
