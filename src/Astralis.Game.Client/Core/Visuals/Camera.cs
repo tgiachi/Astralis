@@ -34,7 +34,7 @@ public class Camera
     public Camera(IWindow? window = null, IMouse? mouse = null)
     {
         _mouse = mouse;
-        Setup(Vector3.Zero, Vector3.UnitZ * 1, WorldUp, 800f / 600f);
+        Setup(new Vector3(0,0,3), Vector3.UnitZ * 1, WorldUp, 800f / 600f);
         _frustum = new Frustum(this);
 
         if (window is null)

@@ -44,7 +44,6 @@ public class PlayerGameObject : BaseGameObject, IDebuggableComponent
 
     public PlayerGameObject(IOpenGlContext openGlContext, Camera camera, Vector3 position = default)
     {
-
         _openGlContext = openGlContext;
         _camera = camera;
         AstralisGameInstances.Camera = _camera;
@@ -116,6 +115,7 @@ public class PlayerGameObject : BaseGameObject, IDebuggableComponent
         {
             Position -= _camera.WorldUp * speed;
         }
+
 
         PlayerDirection = MathHelper.GetDirection(_lastPosition, Position);
         _lastPosition = Position;

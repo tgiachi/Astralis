@@ -30,6 +30,7 @@ class Program
         AstralisGameInstances.BlockService();
         AstralisGameInstances.EcsService();
 
+
         AstralisGameInstances.OpenGlContext = new OpenGlContext(
             new AstralisGameConfig(),
             AstralisGameInstances.EventBusService()

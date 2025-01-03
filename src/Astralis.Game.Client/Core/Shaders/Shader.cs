@@ -1,5 +1,6 @@
 using System.Numerics;
 using Astralis.Game.Client.Core.Utils;
+using Serilog;
 using Silk.NET.OpenGL;
 
 namespace Astralis.Game.Client.Core.Shaders;
@@ -36,10 +37,41 @@ public class Shader : IDisposable
         _gl.DeleteShader(fragment);
 
         GLUtility.CheckError(_gl);
+
+        _gl.GetProgram(Handle, GLEnum.ActiveUniforms, out var uniformCount);
+        Log.ForContext<Shader>().Debug("{ShaderHandle} Active uniforms: {Count}", Handle, uniformCount);
+
+        for (uint i = 0; i < uniformCount; i++)
+        {
+            // get the name of this uniform,
+            var key = _gl.GetActiveUniform(Handle, i, out _, out _);
+
+            Log.ForContext<Shader>().Debug("{ShaderHandle} Uniform name: {Name}", Handle, key);
+
+            // get the location,
+            var location = _gl.GetUniformLocation(Handle, key);
+
+            // and then add it to the dictionary.
+            _uniformLocations.Add(key, location);
+        }
+    }
+
+    public void DebugUniforms()
+    {
+        _gl.GetProgram(Handle, GLEnum.ActiveUniforms, out var uniformCount);
+        Log.ForContext<Shader>().Information("Active uniforms: {Count}", uniformCount);
+
+        for (uint i = 0; i < uniformCount; i++)
+        {
+            string name = _gl.GetActiveUniform(Handle, i, out _, out _);
+            int location = _gl.GetUniformLocation(Handle, name);
+            Log.ForContext<Shader>().Information("Uniform '{Name}' at location {Location}", name, location);
+        }
     }
 
     public void Use()
     {
+        //  DebugUniforms();
         _gl.UseProgram(Handle);
     }
 
@@ -50,29 +82,45 @@ public class Shader : IDisposable
 
     public void SetUniform(string name, int value)
     {
-        int location = _gl.GetUniformLocation(Handle, name);
+        _uniformLocations.TryGetValue(name, out int location);
         if (location == -1)
         {
             throw new Exception($"{name} uniform not found on shader.");
         }
+
+        _gl.UseProgram(Handle);
+
         _gl.Uniform1(location, value);
         GLUtility.CheckError(_gl);
     }
 
     public void SetUniform(string name, float value)
     {
-        int location = _gl.GetUniformLocation(Handle, name);
+        _uniformLocations.TryGetValue(name, out int location);
         if (location == -1)
         {
             throw new Exception($"{name} uniform not found on shader.");
         }
+
         _gl.Uniform1(location, value);
+        GLUtility.CheckError(_gl);
+    }
+
+    public unsafe void SetUniform(string name, Vector4 value)
+    {
+        _uniformLocations.TryGetValue(name, out int location);
+        if (location == -1)
+        {
+            throw new Exception($"{name} uniform not found on shader.");
+        }
+
+        _gl.Uniform4(location, value.X, value.Y, value.Z, value.W);
         GLUtility.CheckError(_gl);
     }
 
     public unsafe void SetUniform(string name, Matrix4x4 value)
     {
-        int location = _gl.GetUniformLocation(Handle, name);
+        _uniformLocations.TryGetValue(name, out int location);
         if (location == -1)
         {
             throw new Exception($"{name} uniform not found on shader.");
@@ -84,7 +132,7 @@ public class Shader : IDisposable
 
     public int GetUniformLocation(string name)
     {
-        if (!_uniformLocations.ContainsKey(name))
+        if (!_uniformLocations.TryGetValue(name, out int value))
         {
             int location = _gl.GetUniformLocation(Handle, name);
             if (location == -1)
@@ -92,10 +140,11 @@ public class Shader : IDisposable
                 throw new Exception($"{name} uniform not found on shader.");
             }
 
-            _uniformLocations.Add(name, _gl.GetUniformLocation(Handle, name));
+            value = _gl.GetUniformLocation(Handle, name);
+            _uniformLocations.Add(name, value);
         }
 
-        return _uniformLocations[name];
+        return value;
     }
 
     public int GetAttribLocation(string attribName)
@@ -105,7 +154,6 @@ public class Shader : IDisposable
         GLUtility.CheckError(_gl);
         return result;
     }
-
 
 
     public void SetUniform(string name, Vector3 value) => _gl.Uniform3(GetUniformLocation(name), value.X, value.Y, value.Z);

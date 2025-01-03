@@ -11,5 +11,6 @@ end)
 
 on_bootstrap(function ()
     log_info("Hello, world!")
+    log_info("Ciao da Tommy!")
 
 end)

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.InteropServices;
+using System.Text;
 using Astralis.Core.Interfaces.Services;
 using Astralis.Core.Numerics;
 using Astralis.Core.Server.Events.Engine;
@@ -48,7 +49,7 @@ public class OpenGlContext
     public uint UboWorldHandle { get; private set; }
     public uint UboUiHandle { get; private set; }
 
-    public static readonly Color DEFAULT_CLEAR_COLOR = Color.Black;
+    public static readonly Color DEFAULT_CLEAR_COLOR = Color.CornflowerBlue;
     public Color ClearColor = DEFAULT_CLEAR_COLOR;
 
     private Glfw glfw;
@@ -144,8 +145,8 @@ public class OpenGlContext
         PrimaryKeyboard.KeyDown += KeyDown;
 
         //EnableFaceCulling();
-        EnableAntiAliasing();
-        EnableBlending();
+        //EnableAntiAliasing();
+        // EnableBlending();
 
         OnStartEvent?.Invoke(Gl);
         _eventBusService.Publish(new EngineStartedEvent());
@@ -231,9 +232,12 @@ public class OpenGlContext
         }
 
         _frameCount++;
+        //   Gl.Enable(EnableCap.DepthTest);
+        Gl.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+       // EnableBlending();
         Gl.Enable(EnableCap.DepthTest);
-        Gl.ClearColor(ClearColor);
-        Gl.Clear((uint)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+
+        Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
         OnRenderEvent?.Invoke(delta, Gl);
         // game.Draw(Gl, delta);
@@ -241,6 +245,7 @@ public class OpenGlContext
 
         imGuiController.Render();
     }
+
 
     private void FrameBufferResize(Vector2D<int> size)
     {

@@ -17,7 +17,7 @@ public static class AstralisGameInstances
     public static IEventBusService EventBusService() => ServiceProvider.GetService<IEventBusService>();
     public static IBlockService BlockService() => ServiceProvider.GetService<IBlockService>();
 
-    public static Camera Camera { get; set; }
+    public static Camera? Camera { get; set; }
     public static ITextureManagerService TextureManagerService() => ServiceProvider.GetService<ITextureManagerService>();
     public static IOpenGlContext OpenGlContext { get; set; }
 

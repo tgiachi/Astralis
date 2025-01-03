@@ -2,8 +2,8 @@ namespace Astralis.Core.World.Blocks;
 
 public enum BlockType : byte
 {
+    Air = 0,
     Bedrock,
-    Air,
     Grass_Dirt,
     Dirt,
     Stone,

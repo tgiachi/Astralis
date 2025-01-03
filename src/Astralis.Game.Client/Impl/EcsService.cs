@@ -9,16 +9,19 @@ using Astralis.Game.Client.Components;
 using Astralis.Game.Client.Core.Buffer;
 using Astralis.Game.Client.Core.Visuals;
 using Astralis.Game.Client.Data.Events.Ecs;
+using Astralis.Game.Client.Ecs.Components;
 using Astralis.Game.Client.Ecs.GameObjects;
 using Astralis.Game.Client.Ecs.GameObjects.Debugger;
 using Astralis.Game.Client.Ecs.Interfaces;
 using Astralis.Game.Client.Interfaces.Entities;
 using Astralis.Game.Client.Interfaces.Services;
 using Astralis.Game.Client.Systems;
+using Astralis.Game.Client.Types;
 using ImGuiNET;
 using Schedulers;
 using Serilog;
 using Silk.NET.OpenGL;
+using Shader = Astralis.Game.Client.Core.Shaders.Shader;
 
 namespace Astralis.Game.Client.Impl;
 
@@ -77,9 +80,14 @@ public class EcsService : IEcsService
 
     private void InitGroups()
     {
+        var shader = new Shader(
+            AstralisGameInstances.OpenGlContext.Gl,
+            Path.Combine(AstralisGameInstances.AssetDirectories[AssetDirectoryType.Shaders], "Quad")
+        );
         _renderGroup = new Group<GL>(
             "render_group",
-            new RenderSystem(_world),
+            //new RenderSystem(_world),
+            new QuadRenderSystem(AstralisGameInstances.OpenGlContext.Gl, shader, _world),
             new TextRenderSystem(_world, AstralisGameInstances.OpenGlContext),
             new Texture2dRenderSystem(_world),
             new ImguiRenderSystem(_world),
@@ -117,6 +125,10 @@ public class EcsService : IEcsService
             )
         );
 
+        AddEntity(
+            new Quad(AstralisGameInstances.TextureManagerService().GetTexture("grass_side"), Vector3.One, BlockFace.FRONT)
+        );
+
         AddEntity(new DebugMemoryGameObject());
 
         AstralisGameInstances.Camera = new Camera(
@@ -135,6 +147,23 @@ public class EcsService : IEcsService
         // {
         //     _logger.Error(e, "Failed to create texture2d game object");
         // }
+
+        for (var i = 0; i < 100; i++)
+        {
+            var position = new Vector3(
+                Random.Shared.Next(-10, 10),
+                Random.Shared.Next(-10, 10),
+                Random.Shared.Next(-10, 10)
+            );
+            var face = (BlockFace)Random.Shared.Next(0, 6);
+
+            AddEntity(
+                new Quad(AstralisGameInstances.TextureManagerService().GetTexture("grass_side"), position, face)
+            );
+        }
+
+
+        //random position
     }
 
 

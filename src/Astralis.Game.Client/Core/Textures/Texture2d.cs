@@ -10,10 +10,10 @@ namespace Astralis.Game.Client.Core.Textures;
 public unsafe class Texture2d : IDisposable
 {
     private readonly GL _gl;
-    private readonly uint _handle;
     public readonly int Width;
     public readonly int Height;
 
+    public uint Handle { get; }
 
     public Texture2d(GL gl, int width, int height)
     {
@@ -21,7 +21,7 @@ public unsafe class Texture2d : IDisposable
         Width = width;
         Height = height;
 
-        _handle = gl.GenTexture();
+        Handle = gl.GenTexture();
         GLUtility.CheckError(gl);
         Bind();
 
@@ -52,7 +52,7 @@ public unsafe class Texture2d : IDisposable
         Height = (int)height;
 
         //Generating the opengl handle;
-        _handle = this._gl.GenTexture();
+        Handle = this._gl.GenTexture();
         Bind();
 
         //We want the ability to create a texture using data generated from code aswell.
@@ -77,7 +77,7 @@ public unsafe class Texture2d : IDisposable
     public Texture2d(GL gl, string path)
     {
         _gl = gl;
-        _handle = gl.GenTexture();
+        Handle = gl.GenTexture();
 
         Bind();
 
@@ -154,14 +154,14 @@ public unsafe class Texture2d : IDisposable
         _gl.ActiveTexture(textureSlot);
         GLUtility.CheckError(_gl);
 
-        _gl.BindTexture(TextureTarget.Texture2D, _handle);
+        _gl.BindTexture(TextureTarget.Texture2D, Handle);
         GLUtility.CheckError(_gl);
     }
 
     public void Dispose()
     {
         //In order to dispose we need to delete the opengl handle for the texure.
-        _gl.DeleteTexture(_handle);
+        _gl.DeleteTexture(Handle);
         GLUtility.CheckError(_gl);
     }
 
@@ -183,5 +183,11 @@ public unsafe class Texture2d : IDisposable
             );
             GLUtility.CheckError(_gl);
         }
+    }
+
+    public void Use(TextureUnit unit = TextureUnit.Texture0)
+    {
+        _gl.ActiveTexture(unit);
+        _gl.BindTexture(TextureTarget.Texture2D, Handle);
     }
 }

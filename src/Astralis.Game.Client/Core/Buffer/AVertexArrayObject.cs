@@ -43,6 +43,11 @@ public class AVertexArrayObject<TVertexType, TIndexType> : IDisposable
         _gl.EnableVertexAttribArray(index);
     }
 
+    public unsafe void VertexAttributePointer(uint index, int count, VertexAttribPointerType type, int stride, int offset)
+    {
+        _gl.EnableVertexAttribArray(index);
+        _gl.VertexAttribPointer(index, count, type, false, (uint)(stride * sizeof(float)), (void*)(offset * sizeof(float)));
+    }
 
     /**
      * <summary>Bind a vertex attribute to a field of the vertex type
